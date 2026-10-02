@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -16,6 +18,14 @@
                 }
             }
         }
+    </script>
+    <script>
+        // --- Supabase Credentials Initialization ---
+        const SUPABASE_URL = 'https://bbjkcnqzupncxmguzpwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiamtjbnF6dXBuY3htZ3V6cHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NDM1NzEsImV4cCI6MjEwNjUxOTU3MX0.k6jWGLOUnpO1hw_5ID-AWfn5N_F9fBoPuY71donnr8I';
+        
+        // Initialize client instance
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
     </script>
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-brand-600 selection:text-white">
@@ -492,29 +502,52 @@
         </div>
     </footer>
 
-    <!-- App Logic Script -->
+    <!-- App Logic Script with Supabase Integration -->
     <script>
+        const db = supabaseClient;
+
         const defaultProducts = [
             { id: 1, name: "Royal Teak Living Room Sofa Set", category: "Living Room", subCategory: "Sofa Sets", priceNum: 185000, description: "Handcrafted from 100% seasoned genuine teak wood.", dimensions: "3-Seater: 78\"L x 32\"W x 34\"H", warranty: "5 Years Structural", images: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"], badge: "Best Seller", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 5000 },
             { id: 2, name: "Modern Modular Kitchen Cabinet", category: "Kitchen", subCategory: "Kitchen Cabinets", priceNum: 210000, description: "Sleek kitchen storage cabinets built with moisture-resistant materials.", dimensions: "Custom Fit Setup", warranty: "3 Years Warranty", images: ["https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800"], badge: "New Arrival", stockStatus: "In Stock", onSale: true, createdAt: Date.now() - 2000 },
             { id: 3, name: "Heavy-Duty Plastic Armchair", category: "Plastic", subCategory: "Chairs", priceNum: 6500, description: "Built with premium virgin polymer for maximum durability.", dimensions: "24\"W x 22\"D x 33\"H", warranty: "1 Year Warranty", images: ["https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800"], badge: "Durable", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 1000 }
         ];
 
-        let furnitureProducts = JSON.parse(localStorage.getItem('emarko_products')) || defaultProducts;
-        furnitureProducts.forEach(p => {
-            if (!p.priceNum && p.price) {
-                p.priceNum = parseInt(p.price.replace(/[^0-9]/g, '')) || 50000;
-            }
-            if (!p.createdAt) p.createdAt = Date.now();
-        });
-
+        let furnitureProducts = [];
         let clickAnalytics = JSON.parse(localStorage.getItem('emarko_clicks')) || { totalClicks: 0, items: {} };
         let cart = JSON.parse(localStorage.getItem('emarko_cart')) || [];
         let showAllCatalog = false;
         let currentFilterCategory = 'all';
 
+        // --- Fetch Products from Supabase ---
+        async function fetchProducts() {
+            const { data, error } = await db.from('products').select('*');
+            if (error) {
+                console.error('Error fetching products:', error);
+                furnitureProducts = defaultProducts;
+            } else if (data && data.length > 0) {
+                furnitureProducts = data.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    category: item.category,
+                    subCategory: item.sub_category || item.subCategory,
+                    priceNum: item.price_num || item.priceNum,
+                    description: item.description,
+                    dimensions: item.dimensions,
+                    warranty: item.warranty,
+                    images: item.images || [],
+                    badge: item.badge,
+                    stockStatus: item.stock_status || item.stockStatus,
+                    onSale: item.on_sale || item.onSale,
+                    createdAt: new Date(item.created_at || item.createdAt).getTime()
+                }));
+            } else {
+                furnitureProducts = defaultProducts;
+            }
+            handleAdvancedFilters();
+            updateCartBadge();
+        }
+
         const persistData = () => {
-            localStorage.setItem('emarko_products', JSON.stringify(furnitureProducts));
             localStorage.setItem('emarko_clicks', JSON.stringify(clickAnalytics));
             localStorage.setItem('emarko_cart', JSON.stringify(cart));
             updateCartBadge();
@@ -841,9 +874,41 @@
             renderDashboardInventory(furnitureProducts.filter(p => (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) && (cat === 'all' || p.category === cat)));
         };
 
-        const toggleProductStock = (id) => { const p = furnitureProducts.find(item => item.id === id); if (p) { p.stockStatus = p.stockStatus === "Out of Stock" ? "In Stock" : "Out of Stock"; persistData(); updateDashboardStats(); filterDashboardInventory(); } };
-        const toggleSaleStatus = (id) => { const p = furnitureProducts.find(item => item.id === id); if (p) { p.onSale = !p.onSale; persistData(); filterDashboardInventory(); } };
-        const deleteProduct = (id) => { if (confirm("Delete this item?")) { furnitureProducts = furnitureProducts.filter(p => p.id !== id); persistData(); updateDashboardStats(); filterDashboardInventory(); } };
+        const toggleProductStock = async (id) => { 
+            const p = furnitureProducts.find(item => item.id === id); 
+            if (p) { 
+                const newStatus = p.stockStatus === "Out of Stock" ? "In Stock" : "Out of Stock";
+                const { error } = await db.from('products').update({ stock_status: newStatus }).eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    updateDashboardStats(); 
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
+
+        const toggleSaleStatus = async (id) => { 
+            const p = furnitureProducts.find(item => item.id === id); 
+            if (p) { 
+                const newSaleState = !p.onSale;
+                const { error } = await db.from('products').update({ on_sale: newSaleState }).eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
+
+        const deleteProduct = async (id) => { 
+            if (confirm("Delete this item?")) { 
+                const { error } = await db.from('products').delete().eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    updateDashboardStats(); 
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
 
         const exportAnalyticsCSV = () => {
             let csvRows = [];
@@ -893,51 +958,50 @@
 
         const closeProductEditor = () => { document.getElementById('productEditorModal').classList.add('hidden'); document.getElementById('productEditorModal').classList.remove('flex'); };
 
-        const saveProductForm = (e) => {
+        const saveProductForm = async (e) => {
             e.preventDefault();
             const editId = document.getElementById('editProductId').value;
             const data = {
                 name: document.getElementById('formName').value,
                 category: document.getElementById('formCategory').value,
-                subCategory: document.getElementById('formSubCategory').value,
-                priceNum: parseInt(document.getElementById('formNumericPrice').value) || 50000,
+                sub_category: document.getElementById('formSubCategory').value,
+                price_num: parseInt(document.getElementById('formNumericPrice').value) || 50000,
                 badge: document.getElementById('formBadge').value,
                 description: document.getElementById('formDescription').value,
                 dimensions: document.getElementById('formDimensions').value,
                 warranty: document.getElementById('formWarranty').value,
-                stockStatus: document.getElementById('formStockStatus').value,
-                onSale: false,
-                createdAt: Date.now()
+                stock_status: document.getElementById('formStockStatus').value,
+                on_sale: false
             };
 
             const urlInput = document.getElementById('formImageUrl').value.trim();
             const fileInput = document.getElementById('formImageFile');
 
-            const saveWithImg = (imgUrl) => {
+            const saveWithImg = async (imgUrl) => {
+                const finalImg = imgUrl || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+                data.images = [finalImg, finalImg, finalImg];
+
                 if (editId) {
-                    const p = furnitureProducts.find(item => item.id == editId);
-                    if (p) {
-                        const existingCreatedAt = p.createdAt;
-                        const existingOnSale = p.onSale;
-                        Object.assign(p, data);
-                        p.createdAt = existingCreatedAt;
-                        p.onSale = existingOnSale;
-                        if (imgUrl) p.images = [imgUrl, imgUrl, imgUrl];
-                    }
+                    const { error } = await db.from('products').update(data).eq('id', editId);
+                    if (error) console.error('Error updating product:', error);
                 } else {
-                    const newId = furnitureProducts.length > 0 ? Math.max(...furnitureProducts.map(p => p.id)) + 1 : 1;
-                    const finalImg = imgUrl || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
-                    furnitureProducts.unshift({ id: newId, ...data, images: [finalImg, finalImg, finalImg] });
+                    const { error } = await db.from('products').insert([data]);
+                    if (error) console.error('Error inserting product:', error);
                 }
-                persistData(); closeProductEditor(); updateDashboardStats(); filterDashboardInventory(); handleAdvancedFilters();
+
+                await fetchProducts();
+                closeProductEditor(); 
+                updateDashboardStats(); 
+                filterDashboardInventory(); 
+                handleAdvancedFilters();
             };
 
             if (fileInput.files && fileInput.files[0]) {
                 const reader = new FileReader();
-                reader.onload = (evt) => saveWithImg(evt.target.result);
+                reader.onload = async (evt) => await saveWithImg(evt.target.result);
                 reader.readAsDataURL(fileInput.files[0]);
             } else {
-                saveWithImg(urlInput || null);
+                await saveWithImg(urlInput || null);
             }
         };
 
@@ -963,7 +1027,7 @@
         const toggleMobileMenu = () => document.getElementById('mobileMenu').classList.toggle('hidden');
 
         document.addEventListener('DOMContentLoaded', () => {
-            handleAdvancedFilters();
+            fetchProducts();
             updateCartBadge();
         });
     </script>
