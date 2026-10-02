@@ -3,299 +3,1252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-Marko Modern Furniture</title>
-    <!-- Tailwind CSS CDN -->
+    <title>Emarko Furniture | Premium Handcrafted Living</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
-                    colors: {
-                        brand: {
-                            50: '#fbf7f5',
-                            100: '#f6eee9',
-                            500: '#d97706',
-                            600: '#b45309',
-                            900: '#451a03',
-                        }
-                    }
+                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
+                    colors: { brand: { 50: '#fbf8f5', 100: '#f4ede4', 600: '#8b5a2b', 700: '#704620', 800: '#583618', 900: '#3d2510' } }
                 }
             }
         }
     </script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        // --- Supabase Credentials Initialization ---
+        const SUPABASE_URL = 'https://bbjkcnqzupncxmguzpwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiamtjbnF6dXBuY3htZ3V6cHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NDM1NzEsImV4cCI6MjEwNjUxOTU3MX0.k6jWGLOUnpO1hw_5ID-AWfn5N_F9fBoPuY71donnr8I';
+        
+        // Initialize client instance
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    </script>
 </head>
-<body class="bg-stone-50 text-stone-800 font-sans antialiased">
+<body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-brand-600 selection:text-white relative">
 
-    <!-- Header Navigation -->
-    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-brand-600 text-white p-2 rounded-xl">
-                    <i class="fa-solid fa-couch text-lg"></i>
+    <!-- Toast / Background Process Alert Notification -->
+    <div id="toastNotification" class="fixed bottom-6 right-6 z-[100] transform translate-y-20 opacity-0 transition-all duration-300 bg-stone-900 text-white px-5 py-4 rounded-2xl shadow-2xl flex items-center gap-3 border border-stone-700 pointer-events-none">
+        <div id="toastIcon" class="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shrink-0"><i class="fa-solid fa-spinner animate-spin"></i></div>
+        <div>
+            <h4 id="toastTitle" class="font-bold text-xs tracking-wide uppercase text-stone-200">Processing</h4>
+            <p id="toastMessage" class="text-xs text-stone-400">Saving product in background...</p>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-[4px] border-brand-600 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-4">
+            <a href="#" class="flex items-center gap-3 group shrink-0">
+                <div class="w-11 h-11 bg-brand-900 rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl shadow-md group-hover:bg-brand-800 transition">E</div>
+                <div>
+                    <span class="font-serif font-bold text-2xl tracking-tight text-stone-900 block leading-none">Emarko</span>
+                    <span class="text-[11px] tracking-[0.25em] text-brand-600 uppercase font-semibold mt-1 block">Furniture</span>
                 </div>
-                <span class="text-xl font-bold tracking-tight text-stone-900">E-Marko</span>
+            </a>
+
+            <!-- Search Bar -->
+            <div class="hidden md:flex flex-1 max-w-md mx-4">
+                <div class="relative w-full">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-stone-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+                    <input type="text" id="headerSearchInput" oninput="handleLiveSearch(this.value)" onkeydown="handleSearchKeydown(event, this.value)" placeholder="Search furniture, decor, kitchen..." class="w-full bg-stone-100 hover:bg-stone-200/60 focus:bg-white text-stone-900 text-sm rounded-full pl-11 pr-4 py-3 border border-stone-200 focus:border-brand-600 focus:outline-none transition shadow-inner">
+                </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <button onclick="toggleCart()" class="relative p-2 text-stone-600 hover:text-stone-900 transition">
-                    <i class="fa-solid fa-bag-shopping text-xl"></i>
-                    <span id="cartCount" class="absolute -top-1 -right-1 bg-brand-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">0</span>
+            <div class="hidden xl:flex items-center gap-5 text-xs text-stone-600 border-l border-stone-200 pl-6">
+                <div class="flex flex-col gap-1">
+                    <a href="tel:0773484343" class="hover:text-brand-700 transition flex items-center gap-1.5 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
+                    <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="hover:text-brand-700 transition flex items-center gap-1.5 truncate max-w-[220px]"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
+                </div>
+                <div class="flex items-center gap-2">
+                    <button onclick="toggleCartDrawer()" class="relative w-11 h-11 rounded-full bg-brand-50 hover:bg-brand-600 hover:text-white transition text-brand-700 flex items-center justify-center shadow-sm">
+                        <i class="fa-solid fa-bag-shopping text-base"></i>
+                        <span id="cartBadgeCount" class="absolute -top-1 -right-1 bg-brand-800 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
+                    </button>
+                    <!-- Social, WhatsApp & Gmail Icons -->
+                    <a href="https://wa.me/94773484343" onclick="trackContactClick('Header WhatsApp')" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                    <a href="mailto:emarkofurniture@gmail.com" onclick="trackContactClick('Header Gmail')" aria-label="Gmail" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-red-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-solid fa-envelope text-sm"></i></a>
+                    <a href="https://instagram.com" target="_blank" aria-label="Instagram" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-pink-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-instagram text-sm"></i></a>
+                    <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-blue-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                </div>
+            </div>
+
+            <!-- Mobile Toggles -->
+            <div class="flex items-center gap-2 xl:hidden">
+                <button onclick="toggleCartDrawer()" class="relative p-2.5 text-brand-700 bg-brand-50 rounded-xl">
+                    <i class="fa-solid fa-bag-shopping text-base"></i>
+                    <span id="mobileCartBadgeCount" class="absolute -top-1 -right-1 bg-brand-800 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
                 </button>
+                <a href="tel:0773484343" class="p-2.5 text-brand-600 bg-brand-50 rounded-xl"><i class="fa-solid fa-phone text-base"></i></a>
+                <button onclick="toggleMobileMenu()" class="p-2.5 text-stone-700 hover:text-black"><i class="fa-solid fa-bars text-xl"></i></button>
+            </div>
+        </div>
+
+        <div class="md:hidden px-4 pb-4 bg-white">
+            <div class="relative w-full">
+                <span class="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-stone-400"><i class="fa-solid fa-magnifying-glass"></i></span>
+                <input type="text" id="mobileSearchInput" oninput="handleLiveSearch(this.value)" onkeydown="handleSearchKeydown(event, this.value)" placeholder="Search furniture..." class="w-full bg-stone-100 text-stone-900 text-sm rounded-full pl-11 pr-4 py-2.5 border border-stone-200 focus:border-brand-600 focus:outline-none">
+            </div>
+        </div>
+
+        <!-- Desktop Navigation & Dropdowns -->
+        <div class="bg-brand-900 text-white border-t border-brand-800 hidden md:block">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <nav class="flex items-center justify-center gap-6 lg:gap-8 text-xs lg:text-sm font-semibold tracking-wide">
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Living Room')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">LIVING ROOM <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-72 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Sofa Sets')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Sofa Sets</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Coffee Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Coffee Tables</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'TV Stands')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">TV Stands</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Wall Units')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Wall Units</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Display Cabinets & Racks')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Display Cabinets & Racks</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Dining Table Sets')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Dining Table Sets</a>
+                            <a href="#" onclick="filterBySubCategory('Living Room', 'Shoe Rack')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Shoe Rack</a>
+                        </div>
+                    </div>
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Bedroom')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">BEDROOM <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Bedroom Sets')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Bedroom Sets</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Beds')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Beds</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Chest of Drawer')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Chest of Drawer</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Wardrobes')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Wardrobes</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Study Desks')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Study Desks</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Dressing Table')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Dressing Table</a>
+                            <a href="#" onclick="filterBySubCategory('Bedroom', 'Bedside Cupboard')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Bedside Cupboard</a>
+                        </div>
+                    </div>
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Office')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">OFFICE FURNITURE <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Office', 'Office Chairs')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Office Chairs</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Office Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Office Tables</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Executive Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Executive Tables</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Conference Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Conference Tables</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Computer Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Computer Tables</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Cupboards & Racks')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Cupboards & Racks</a>
+                            <a href="#" onclick="filterBySubCategory('Office', 'Lobby Chairs')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Lobby Chairs</a>
+                        </div>
+                    </div>
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Kitchen')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">KITCHEN <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-60 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Kitchen', 'Kitchen Cabinets')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Kitchen Cabinets</a>
+                            <a href="#" onclick="filterBySubCategory('Kitchen', 'Pantries & Islands')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Pantries & Islands</a>
+                            <a href="#" onclick="filterBySubCategory('Kitchen', 'Storage Racks')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Storage Racks</a>
+                        </div>
+                    </div>
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Mattress')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">MATTRESS <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-56 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Mattress', 'Spring Mattress')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Spring Mattress</a>
+                            <a href="#" onclick="filterBySubCategory('Mattress', 'Foam Mattress')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Foam Mattress</a>
+                        </div>
+                    </div>
+                    <div class="relative group py-3">
+                        <button onclick="filterProducts('Plastic')" class="flex items-center gap-1.5 hover:text-amber-200 transition py-1">PLASTIC <i class="fa-solid fa-chevron-down text-xs transition group-hover:rotate-180"></i></button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 pt-2 w-64 bg-white text-stone-800 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 border border-stone-100 py-2">
+                            <a href="#" onclick="filterBySubCategory('Plastic', 'Chairs')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Chairs</a>
+                            <a href="#" onclick="filterBySubCategory('Plastic', 'Dinning & Coffee Tables')" class="block px-5 py-2.5 hover:bg-stone-50 hover:text-brand-700 text-sm transition">Dinning & Coffee Tables</a>
+                        </div>
+                    </div>
+                    <div class="py-3">
+                        <button onclick="filterProducts('Other')" class="hover:text-amber-200 transition py-1">OTHER</button>
+                    </div>
+                </nav>
+            </div>
+        </div>
+
+        <!-- Mobile Nav Drawer -->
+        <div id="mobileMenu" class="hidden xl:hidden bg-white border-b border-stone-200 px-6 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
+            <div class="space-y-3 pb-4 border-b border-stone-100 text-sm font-semibold">
+                <div class="text-brand-700 font-bold cursor-pointer" onclick="filterProducts('Living Room'); toggleMobileMenu();">LIVING ROOM</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Bedroom'); toggleMobileMenu();">BEDROOM</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Office'); toggleMobileMenu();">OFFICE FURNITURE</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Kitchen'); toggleMobileMenu();">KITCHEN</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Mattress'); toggleMobileMenu();">MATTRESS</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Plastic'); toggleMobileMenu();">PLASTIC PRODUCTS</div>
+                <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Other'); toggleMobileMenu();">OTHER</div>
+            </div>
+            <div class="space-y-2 text-xs text-stone-600">
+                <a href="tel:0773484343" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
+                <a href="mailto:emarkofurniture@gmail.com" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-envelope text-brand-600"></i> emarkofurniture@gmail.com</a>
+                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
+            </div>
+            <div class="flex items-center gap-3 pt-2">
+                <a href="https://wa.me/94773484343" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                <a href="mailto:emarkofurniture@gmail.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-solid fa-envelope text-sm"></i></a>
+                <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-instagram text-sm"></i></a>
+                <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-facebook-f text-sm"></i></a>
             </div>
         </div>
     </header>
 
-    <!-- Main Content -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        <!-- Controls & Filters Section -->
-        <section class="mb-8 space-y-4">
-            <div class="flex flex-col md:flex-row gap-4 justify-between items-start md:items-center">
-                <!-- Search Bar -->
-                <div class="relative w-full md:w-80">
-                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-stone-400"></i>
-                    <input type="text" id="searchInput" oninput="handleAdvancedFilters()" placeholder="Search furniture..." class="w-full pl-10 pr-4 py-2 bg-white border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 transition">
-                </div>
-
-                <!-- Category Pills -->
-                <div class="flex flex-wrap gap-2 bg-stone-200/60 p-1 rounded-2xl w-full md:w-auto">
-                    <button onclick="filterProducts('all')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium bg-white text-stone-900 shadow-sm transition">All</button>
-                    <button onclick="filterProducts('Living Room')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Living</button>
-                    <button onclick="filterProducts('Bedroom')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Bedroom</button>
-                    <button onclick="filterProducts('Dining')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Dining</button>
-                    <button onclick="filterProducts('Office')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Office</button>
+    <!-- Hero Section -->
+    <section class="relative bg-stone-900 text-white overflow-hidden">
+        <div class="absolute inset-0 z-0 opacity-45 mix-blend-overlay">
+            <img src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&q=80&w=1920" alt="Interior" class="w-full h-full object-cover">
+        </div>
+        <div class="absolute inset-0 bg-gradient-to-r from-stone-950 via-stone-900/80 to-transparent z-0"></div>
+        <div class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
+            <div class="max-w-2xl">
+                <span class="inline-block bg-brand-600 text-white text-xs uppercase tracking-widest px-3 py-1 rounded-full font-semibold mb-6">Handcrafted Excellence</span>
+                <h1 class="font-serif text-4xl sm:text-6xl font-bold tracking-tight leading-tight mb-6">Timeless Furniture for Modern Homes</h1>
+                <p class="text-stone-300 text-lg sm:text-xl font-light mb-10 leading-relaxed">Explore our exquisite collection of premium teak, solid wood, and specialized furnishings.</p>
+                <div class="flex flex-wrap items-center gap-4">
+                    <a href="#collection" class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-medium transition shadow-lg">Browse Collection</a>
+                    <a href="#location" class="bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-medium transition flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-400"></i> Visit Showroom</a>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Advanced Price Filter -->
-            <div class="bg-white p-4 rounded-2xl border border-stone-200 flex flex-col md:flex-row gap-4 items-center justify-between">
-                <div class="flex items-center gap-3 w-full md:w-1/2">
-                    <label for="priceRangeSlider" class="text-xs sm:text-sm font-medium text-stone-600 whitespace-nowrap">Max Price:</label>
-                    <input type="range" id="priceRangeSlider" min="5000" max="10000000" step="5000" value="10000000" oninput="syncPriceFromSlider(this.value)" class="w-full accent-brand-600 cursor-pointer">
-                </div>
-                
-                <!-- Manual Price Input & Unlimited Indicator -->
-                <div class="flex items-center gap-2 w-full md:w-auto justify-end">
-                    <span class="text-xs text-stone-500 font-medium">LKR</span>
-                    <input type="number" id="priceInputManual" min="0" max="99999999" placeholder="Unlimited" oninput="syncPriceFromInput(this.value)" class="w-36 px-3 py-1.5 border border-stone-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-brand-500">
-                    <span id="priceDisplayLabel" class="text-xs font-semibold text-brand-600 bg-brand-50 px-2.5 py-1 rounded-lg">Unlimited</span>
-                </div>
-            </div>
-        </section>
-
-        <!-- Product Grid -->
-        <section>
-            <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Dynamic Products Rendered via JS -->
-            </div>
-            <div id="noResults" class="hidden text-center py-12">
-                <i class="fa-solid fa-couch text-4xl text-stone-300 mb-3"></i>
-                <p class="text-stone-500">No furniture items match your search parameters.</p>
-            </div>
-        </section>
-    </main>
-
-    <!-- Shopping Cart Drawer -->
-    <div id="cartDrawer" class="fixed inset-0 z-50 pointer-events-none transition-opacity duration-300 opacity-0">
-        <div onclick="toggleCart()" class="absolute inset-0 bg-stone-900/40 backdrop-blur-sm"></div>
-        <div class="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-2xl pointer-events-auto flex flex-col justify-between p-6">
+    <!-- Filter & Collection Section -->
+    <section id="collection" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-6">
             <div>
-                <div class="flex justify-between items-center border-b border-stone-100 pb-4 mb-4">
-                    <h2 class="text-lg font-bold text-stone-900">Your Cart</h2>
-                    <button onclick="toggleCart()" class="text-stone-400 hover:text-stone-600">
-                        <i class="fa-solid fa-xmark text-xl"></i>
-                    </button>
+                <span class="text-brand-600 text-xs uppercase tracking-widest font-semibold block mb-2">Our Masterpieces</span>
+                <h2 id="catalogTitle" class="font-serif text-3xl sm:text-4xl font-bold text-stone-900">Featured Furniture Catalog</h2>
+            </div>
+            <!-- Category Buttons -->
+            <div class="flex flex-wrap items-center gap-1.5 bg-stone-200/60 p-1.5 rounded-2xl self-start">
+                <button onclick="filterProducts('all')" class="filter-btn active px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition bg-white text-stone-900 shadow-sm">All</button>
+                <button onclick="filterProducts('Living Room')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Living</button>
+                <button onclick="filterProducts('Bedroom')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Bedroom</button>
+                <button onclick="filterProducts('Office')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Office</button>
+                <button onclick="filterProducts('Kitchen')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Kitchen</button>
+                <button onclick="filterProducts('Mattress')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Mattress</button>
+                <button onclick="filterProducts('Plastic')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Plastic</button>
+                <button onclick="filterProducts('Other')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Other</button>
+            </div>
+        </div>
+
+        <!-- Advanced Filtering & Sorting Sub-Bar -->
+        <div class="bg-white p-4 rounded-2xl border border-stone-200 shadow-sm mb-12 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4 w-full md:w-auto flex-1">
+                <div class="flex-1 max-w-xs">
+                    <div class="flex justify-between text-xs text-stone-600 font-semibold mb-1">
+                        <span>Max Price Filter</span>
+                        <span id="priceRangeLabel" class="text-brand-700 font-bold">Unlimited</span>
+                    </div>
+                    <input type="range" id="priceRangeSlider" min="5000" max="505000" step="5000" value="505000" oninput="handleSliderInput(this.value)" class="w-full accent-brand-600 cursor-pointer">
                 </div>
-                <div id="cartItemsList" class="space-y-4 max-h-[60vh] overflow-y-auto">
-                    <!-- Cart items rendered here -->
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-stone-600 font-semibold whitespace-nowrap">Custom Max:</label>
+                    <input type="number" id="customMaxPriceInput" maxlength="8" placeholder="Unlimited" oninput="handleCustomPriceInput(this.value)" class="w-28 bg-stone-100 text-xs px-2.5 py-1.5 rounded-xl border border-stone-200 focus:outline-none focus:border-brand-600 font-semibold text-stone-800">
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-xs text-stone-600 font-semibold whitespace-nowrap"><input type="checkbox" id="inStockOnlyCheckbox" onchange="handleAdvancedFilters()" class="accent-brand-600 mr-1.5"> In Stock Only</label>
                 </div>
             </div>
-            <div class="border-t border-stone-100 pt-4">
-                <div class="flex justify-between items-center mb-4">
-                    <span class="text-stone-600 font-medium">Total:</span>
-                    <span id="cartTotal" class="text-xl font-bold text-stone-900">LKR 0</span>
+            <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+                <span class="text-xs text-stone-500 font-semibold uppercase">Sort By:</span>
+                <select id="sortDropdown" onchange="handleAdvancedFilters()" class="bg-stone-100 text-xs px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none font-medium text-stone-700">
+                    <option value="default">Featured / Default</option>
+                    <option value="priceLowHigh">Price: Low to High</option>
+                    <option value="priceHighLow">Price: High to Low</option>
+                    <option value="newest">Newest Arrivals</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="seeMoreContainer" class="mt-12 text-center hidden">
+            <button onclick="showAllItems()" class="bg-stone-900 hover:bg-stone-800 text-white px-8 py-3.5 rounded-xl font-medium text-sm transition inline-flex items-center gap-2">See More <i class="fa-solid fa-chevron-down text-xs"></i></button>
+        </div>
+    </section>
+
+    <!-- Product Detail Modal -->
+    <div id="productModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto" onclick="if(event.target === this) closeProductModal()">
+        <div class="bg-white rounded-3xl max-w-4xl w-full overflow-hidden shadow-2xl relative my-8">
+            <button onclick="closeProductModal()" class="absolute top-4 right-4 z-20 w-10 h-10 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-full flex items-center justify-center transition"><i class="fa-solid fa-xmark"></i></button>
+            <div class="grid grid-cols-1 md:grid-cols-2">
+                <div class="bg-stone-100 p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-72 sm:h-80 rounded-2xl overflow-hidden bg-white shadow-inner mb-4 group cursor-zoom-in" onclick="openLightbox(document.getElementById('modalMainImage').src)">
+                            <img id="modalMainImage" src="" alt="" class="w-full h-full object-cover group-hover:scale-125 transition duration-300">
+                            <div class="absolute bottom-3 right-3 bg-stone-900/70 backdrop-blur-md text-white text-[10px] px-2.5 py-1 rounded-lg pointer-events-none"><i class="fa-solid fa-magnifying-glass-plus mr-1"></i> Click to Zoom</div>
+                            <div class="absolute top-3 left-3 flex gap-2">
+                                <span id="modalBadge" class="bg-stone-900/80 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full font-medium"></span>
+                                <span id="modalStockBadge" class="hidden text-xs px-3 py-1 rounded-full font-bold"></span>
+                            </div>
+                        </div>
+                        <div id="modalThumbnails" class="flex items-center gap-3 overflow-x-auto pb-2"></div>
+                    </div>
                 </div>
-                <button class="w-full bg-brand-600 text-white font-medium py-3 rounded-xl hover:bg-brand-500 transition">Proceed to Checkout</button>
+                <div class="p-6 sm:p-8 flex flex-col justify-between">
+                    <div>
+                        <span id="modalCategory" class="text-xs text-brand-600 font-bold uppercase tracking-wider block mb-1"></span>
+                        <h2 id="modalTitle" class="font-serif text-2xl sm:text-3xl font-bold text-stone-900 mb-3"></h2>
+                        <div id="modalPrice" class="text-brand-800 font-bold text-2xl mb-4"></div>
+                        <p id="modalDescription" class="text-stone-600 text-sm leading-relaxed mb-6"></p>
+                        <div class="bg-stone-50 rounded-2xl p-4 border border-stone-200 space-y-3 mb-6 text-sm">
+                            <div class="flex items-center gap-3 text-stone-700">
+                                <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-ruler-combined"></i></div>
+                                <div><strong class="text-stone-900 block text-xs uppercase">Dimensions</strong><span id="modalDimensions"></span></div>
+                            </div>
+                            <div class="flex items-center gap-3 text-stone-700 pt-2 border-t border-stone-200">
+                                <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-shield-halved"></i></div>
+                                <div><strong class="text-stone-900 block text-xs uppercase">Warranty</strong><span id="modalWarranty"></span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="modalActionContainer" class="space-y-3"></div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- Lightbox Fullscreen Zoom Modal -->
+    <div id="lightboxModal" class="fixed inset-0 z-[70] bg-stone-950/95 backdrop-blur-md hidden items-center justify-center p-4" onclick="closeLightbox()">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 w-12 h-12 bg-white/10 hover:bg-white/20 text-white rounded-full flex items-center justify-center text-xl transition"><i class="fa-solid fa-xmark"></i></button>
+        <img id="lightboxImg" src="" alt="Zoomed view" class="max-w-full max-h-[90vh] object-contain rounded-2xl shadow-2xl">
+    </div>
+
+    <!-- Shopping Cart Slide-over Drawer -->
+    <div id="cartDrawerBackdrop" class="fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-sm hidden transition-opacity" onclick="toggleCartDrawer()"></div>
+    <div id="cartDrawer" class="fixed inset-y-0 right-0 z-50 w-full max-w-md bg-white shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+        <div class="bg-stone-900 text-white px-6 py-6 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-brand-600 rounded-xl flex items-center justify-center text-white"><i class="fa-solid fa-bag-shopping"></i></div>
+                <div>
+                    <h3 class="font-serif text-xl font-bold">Your Inquiry Cart</h3>
+                    <p class="text-stone-400 text-xs">Review items for bulk quote</p>
+                </div>
+            </div>
+            <button onclick="toggleCartDrawer()" class="w-9 h-9 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div id="cartItemsContainer" class="flex-1 overflow-y-auto p-6 space-y-4 divide-y divide-stone-100"></div>
+        <div class="p-6 bg-stone-50 border-t border-stone-200 space-y-4">
+            <div class="flex items-center justify-between text-sm">
+                <span class="text-stone-600 font-medium">Estimated Total:</span>
+                <span id="cartTotalPrice" class="font-bold text-brand-800 text-lg">LKR 0</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+                <button onclick="submitCartWhatsApp()" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 px-3 rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition"><i class="fa-brands fa-whatsapp text-base"></i> WhatsApp</button>
+                <button onclick="submitCartEmail()" class="bg-rose-600 hover:bg-rose-700 text-white py-3.5 px-3 rounded-xl font-bold text-xs shadow-lg flex items-center justify-center gap-1.5 transition"><i class="fa-solid fa-envelope text-base"></i> Email Quote</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Owner Dashboard Modal -->
+    <div id="ownerDashboardModal" class="fixed inset-0 z-50 bg-stone-950/90 backdrop-blur-md hidden flex-col overflow-y-auto" onclick="if(event.target === this) closeOwnerDashboard()">
+        <div class="max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 my-auto">
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-stone-200">
+                <div class="bg-stone-900 text-white px-6 sm:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-brand-600 rounded-2xl flex items-center justify-center text-white text-xl font-bold"><i class="fa-solid fa-gauge-high"></i></div>
+                        <div>
+                            <h2 class="font-serif text-2xl font-bold">Store Dashboard</h2>
+                            <p class="text-stone-400 text-xs">Manage inventory, discounts & sales metrics</p>
+                        </div>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-3">
+                        <button onclick="exportAnalyticsCSV()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2"><i class="fa-solid fa-file-arrow-down"></i> Export Leads CSV</button>
+                        <button onclick="openAddProductModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Item</button>
+                        <button onclick="closeOwnerDashboard()" class="w-10 h-10 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-xl flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6 bg-stone-100 border-b border-stone-200">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-hand-pointer"></i></div>
+                        <div><span class="text-xs text-stone-500 font-bold uppercase">Contact Clicks</span><span id="statWhatsAppClicks" class="text-2xl font-bold text-stone-900">0</span></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-stacked"></i></div>
+                        <div><span class="text-xs text-stone-500 font-bold uppercase">Total Products</span><span id="statTotalProducts" class="text-2xl font-bold text-stone-900">0</span></div>
+                    </div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 flex items-center gap-4">
+                        <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                        <div><span class="text-xs text-stone-500 font-bold uppercase">Out of Stock</span><span id="statOutOfStock" class="text-2xl font-bold text-stone-900">0</span></div>
+                    </div>
+                </div>
+                <div class="p-6 sm:p-8">
+                    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                        <h3 class="font-serif text-xl font-bold text-stone-900">Inventory Management & Special Discounts</h3>
+                        <div class="flex items-center gap-3 w-full sm:w-auto">
+                            <select id="dashboardCategoryFilter" onchange="filterDashboardInventory()" class="bg-stone-100 text-xs px-3 py-2.5 rounded-xl border border-stone-200 focus:outline-none">
+                                <option value="all">All Categories</option>
+                                <option value="Living Room">Living Room</option>
+                                <option value="Bedroom">Bedroom</option>
+                                <option value="Office">Office</option>
+                                <option value="Kitchen">Kitchen</option>
+                                <option value="Mattress">Mattress</option>
+                                <option value="Plastic">Plastic</option>
+                                <option value="Other">Other</option>
+                            </select>
+                            <input type="text" id="dashboardSearch" oninput="filterDashboardInventory()" placeholder="Search inventory..." class="w-full sm:w-64 bg-stone-100 text-xs px-4 py-2.5 rounded-xl border border-stone-200 focus:outline-none">
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto max-h-[450px] rounded-2xl border border-stone-200">
+                        <table class="w-full text-left border-collapse bg-white text-sm">
+                            <thead class="bg-stone-50 text-stone-700 text-xs uppercase border-b border-stone-200 sticky top-0">
+                                <tr><th class="p-4">Item</th><th class="p-4">Category</th><th class="p-4">Price</th><th class="p-4">Status</th><th class="p-4">Sale Tag</th><th class="p-4 text-center">Actions</th></tr>
+                            </thead>
+                            <tbody id="inventoryTableBody" class="divide-y divide-stone-100 text-stone-700"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Editor Modal -->
+    <div id="productEditorModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm hidden overflow-y-auto p-4 flex items-center justify-center" onclick="if(event.target === this) closeProductEditor()">
+        <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative my-auto">
+            <button onclick="closeProductEditor()" class="absolute top-4 right-4 w-10 h-10 bg-stone-100 hover:bg-stone-200 rounded-full flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+            <h3 id="editorModalTitle" class="font-serif text-2xl font-bold text-stone-900 mb-6">Add Furniture Item</h3>
+            <form id="productForm" onsubmit="saveProductForm(event)" class="space-y-4">
+                <input type="hidden" id="editProductId">
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Item Name</label>
+                    <input type="text" id="formName" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Category</label>
+                        <select id="formCategory" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                            <option value="Living Room">Living Room</option>
+                            <option value="Bedroom">Bedroom</option>
+                            <option value="Office">Office</option>
+                            <option value="Kitchen">Kitchen</option>
+                            <option value="Mattress">Mattress</option>
+                            <option value="Plastic">Plastic</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Sub-Category</label>
+                        <input type="text" id="formSubCategory" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Price (LKR Numbers)</label>
+                        <input type="number" id="formNumericPrice" placeholder="185000" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Badge Tag</label>
+                        <input type="text" id="formBadge" placeholder="Best Seller" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Description</label>
+                    <textarea id="formDescription" rows="3" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required></textarea>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Dimensions</label>
+                        <input type="text" id="formDimensions" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Warranty</label>
+                        <input type="text" id="formWarranty" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                    </div>
+                </div>
+                
+                <!-- Multiple Images Section & Upload Progress -->
+                <div class="space-y-3 pt-1 border-t border-stone-200">
+                    <label class="block text-xs font-bold text-stone-700 uppercase">Product Images (Multiple Options)</label>
+                    
+                    <div>
+                        <span class="text-[11px] text-stone-500 block mb-1">1. Multiple Image URLs (Comma Separated):</span>
+                        <input type="text" id="formImageUrl" placeholder="https://image1.jpg, https://image2.jpg" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200">
+                    </div>
+
+                    <div>
+                        <span class="text-[11px] text-stone-500 block mb-1">2. Upload Multiple Local Images:</span>
+                        <input type="file" id="formImageFile" accept="image/*" multiple onchange="previewSelectedFiles(this)" class="w-full bg-stone-100 text-xs p-2 rounded-xl border border-stone-200">
+                    </div>
+
+                    <!-- Upload Progress Container -->
+                    <div id="uploadProgressContainer" class="hidden bg-stone-100 p-3 rounded-xl border border-stone-200 space-y-1.5">
+                        <div class="flex justify-between text-xs font-bold text-stone-700">
+                            <span id="uploadProgressText">Processing Images...</span>
+                            <span id="uploadProgressPercent">0%</span>
+                        </div>
+                        <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
+                            <div id="uploadProgressBar" class="bg-brand-600 h-full w-0 transition-all duration-150"></div>
+                        </div>
+                    </div>
+
+                    <!-- Selected Files Count / Preview Indicator -->
+                    <div id="selectedFilesBadge" class="hidden text-xs text-brand-700 font-semibold flex items-center gap-1.5">
+                        <i class="fa-solid fa-images"></i> <span id="selectedFilesCount">0 image(s) selected</span>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Stock Status</label>
+                        <select id="formStockStatus" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200">
+                            <option value="In Stock">In Stock</option>
+                            <option value="Out of Stock">Out of Stock</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 pt-2">
+                    <button type="button" onclick="closeProductEditor()" class="w-full bg-stone-200 hover:bg-stone-300 py-3.5 rounded-xl font-semibold text-sm">Cancel</button>
+                    <button type="submit" id="submitProductBtn" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 rounded-xl font-semibold text-sm shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-plus"></i> Add Product
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Why Choose Emarko & Location -->
+    <section class="bg-stone-100 py-20 border-y border-stone-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <span class="text-brand-600 text-xs uppercase tracking-widest font-semibold block mb-2">The Emarko Standard</span>
+                <h2 class="font-serif text-3xl sm:text-4xl font-bold text-stone-900 mb-4">Crafted With Passion & Precision</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-200"><div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fa-solid fa-tree"></i></div><h3 class="font-serif text-xl font-bold mb-3">100% Solid Timber</h3><p class="text-stone-600 text-sm">Seasoned teak and mahogany selected for strength and natural beauty.</p></div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-200"><div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fa-solid fa-couch"></i></div><h3 class="font-serif text-xl font-bold mb-3">Custom Finishing</h3><p class="text-stone-600 text-sm">Choose matte, gloss, or dark walnut finishes tailored to your interior.</p></div>
+                <div class="bg-white p-8 rounded-2xl shadow-sm border border-stone-200"><div class="w-14 h-14 bg-brand-50 text-brand-600 rounded-2xl flex items-center justify-center text-2xl mb-6"><i class="fa-solid fa-shield-halved"></i></div><h3 class="font-serif text-xl font-bold mb-3">Warranty Assured</h3><p class="text-stone-600 text-sm">Structural integrity assurance with dedicated after-sales support.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="location" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+        <div class="bg-stone-900 text-white rounded-3xl overflow-hidden shadow-xl grid grid-cols-1 lg:grid-cols-2">
+            <div class="p-8 sm:p-12 lg:p-16 flex flex-col justify-between">
+                <div>
+                    <span class="text-brand-600 text-xs uppercase tracking-widest font-semibold block mb-2">Showroom</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold mb-6">Experience Quality Firsthand</h2>
+                    <div class="space-y-4 mb-8 text-stone-300 text-sm">
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-location-dot text-brand-600 text-lg mt-0.5"></i><div><strong class="text-white block">Address</strong>Mahaniyara Junction, Kotte, Sri Lanka</div></div>
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-phone text-brand-600 text-lg mt-0.5"></i><div><strong class="text-white block">Hotline</strong>077 348 4343</div></div>
+                        <div class="flex items-start gap-3"><i class="fa-solid fa-envelope text-brand-600 text-lg mt-0.5"></i><div><strong class="text-white block">Email</strong>emarkofurniture@gmail.com</div></div>
+                    </div>
+                </div>
+                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="inline-flex items-center justify-center gap-2 bg-white text-stone-900 py-3.5 px-6 rounded-xl font-medium"><i class="fa-solid fa-map-location-dot text-brand-600"></i> Open in Google Maps</a>
+            </div>
+            <div class="min-h-[350px] bg-stone-800">
+                <iframe title="Map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.898863640243!2d79.9048!3d6.8924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2598370000001%3A0x1!2sMahaniyara%20Junction%2C%20Sri%20Jayawardenepura%20Kotte!5e0!3m2!1sen!2slk!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="w-full h-full"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-stone-950 text-stone-400 pt-16 pb-12 border-t border-stone-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row items-center justify-between text-xs gap-4">
+            <p>&copy; 2026 Emarko Furniture. All rights reserved.</p>
+            <div class="flex items-center gap-6"><a href="#" class="hover:text-stone-300">Privacy Policy</a><a href="#" class="hover:text-stone-300">Terms of Service</a></div>
+        </div>
+    </footer>
+
+    <!-- App Logic Script with Supabase Integration -->
     <script>
-        const products = [
-            { id: 1, name: "Minimalist Fabric Sofa", category: "Living Room", price: 125000, image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=500&q=80" },
-            { id: 2, name: "Nordic Wooden Dining Table", category: "Dining", price: 85000, image: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=500&q=80" },
-            { id: 3, name: "Ergonomic Mesh Office Chair", category: "Office", price: 45000, image: "https://images.unsplash.com/photo-1580481072645-022f9a6d1270?w=500&q=80" },
-            { id: 4, name: "King Size Oak Bed Frame", category: "Bedroom", price: 210000, image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=500&q=80" },
-            { id: 5, name: "Modern Leather Lounge Chair", category: "Living Room", price: 95000, image: "https://images.unsplash.com/photo-1567538096630-e0c55bd6374c?w=500&q=80" },
-            { id: 6, name: "Compact Writing Desk", category: "Office", price: 38000, image: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=500&q=80" }
+        const db = supabaseClient;
+
+        const defaultProducts = [
+            { id: 1, name: "Royal Teak Living Room Sofa Set", category: "Living Room", subCategory: "Sofa Sets", priceNum: 185000, description: "Handcrafted from 100% seasoned genuine teak wood.", dimensions: "3-Seater: 78\"L x 32\"W x 34\"H", warranty: "5 Years Structural", images: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"], badge: "Best Seller", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 5000 },
+            { id: 2, name: "Modern Modular Kitchen Cabinet", category: "Kitchen", subCategory: "Kitchen Cabinets", priceNum: 210000, description: "Sleek kitchen storage cabinets built with moisture-resistant materials.", dimensions: "Custom Fit Setup", warranty: "3 Years Warranty", images: ["https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800"], badge: "New Arrival", stockStatus: "In Stock", onSale: true, createdAt: Date.now() - 2000 },
+            { id: 3, name: "Heavy-Duty Plastic Armchair", category: "Plastic", subCategory: "Chairs", priceNum: 6500, description: "Built with premium virgin polymer for maximum durability.", dimensions: "24\"W x 22\"D x 33\"H", warranty: "1 Year Warranty", images: ["https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800"], badge: "Durable", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 1000 }
         ];
 
-        let cart = [];
+        let furnitureProducts = [];
+        let clickAnalytics = JSON.parse(localStorage.getItem('emarko_clicks')) || { totalClicks: 0, items: {} };
+        let cart = JSON.parse(localStorage.getItem('emarko_cart')) || [];
+        let showAllCatalog = false;
         let currentFilterCategory = 'all';
 
-        // Initialize App
-        document.addEventListener("DOMContentLoaded", () => {
-            renderProducts(products);
-        });
+        // --- Fetch Products from Supabase ---
+        async function fetchProducts() {
+            const { data, error } = await db.from('products').select('*');
+            if (error) {
+                console.error('Error fetching products:', error);
+                if (furnitureProducts.length === 0) furnitureProducts = defaultProducts;
+            } else if (data && data.length > 0) {
+                furnitureProducts = data.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    category: item.category,
+                    subCategory: item.sub_category || item.subCategory,
+                    priceNum: item.price_num || item.priceNum,
+                    description: item.description,
+                    dimensions: item.dimensions,
+                    warranty: item.warranty,
+                    images: Array.isArray(item.images) ? item.images : (item.images ? [item.images] : []),
+                    badge: item.badge,
+                    stockStatus: item.stock_status || item.stockStatus,
+                    onSale: item.on_sale || item.onSale,
+                    createdAt: new Date(item.created_at || item.createdAt).getTime()
+                }));
+            } else if (furnitureProducts.length === 0) {
+                furnitureProducts = defaultProducts;
+            }
+            handleAdvancedFilters();
+            updateCartBadge();
+        }
 
-        // Render Product Cards
-        function renderProducts(items) {
-            const grid = document.getElementById('productGrid');
-            const noResults = document.getElementById('noResults');
-            
-            if (items.length === 0) {
-                grid.innerHTML = '';
-                noResults.classList.remove('hidden');
+        const persistData = () => {
+            localStorage.setItem('emarko_clicks', JSON.stringify(clickAnalytics));
+            localStorage.setItem('emarko_cart', JSON.stringify(cart));
+            updateCartBadge();
+        };
+
+        const formatCurrency = (num) => 'LKR ' + num.toLocaleString();
+
+        const trackContactClick = (source) => {
+            clickAnalytics.totalClicks = (clickAnalytics.totalClicks || 0) + 1;
+            clickAnalytics.items[source] = (clickAnalytics.items[source] || 0) + 1;
+            persistData();
+        };
+
+        // --- Toast / Notification Popup ---
+        const showToast = (title, message, isDone = false) => {
+            const toast = document.getElementById('toastNotification');
+            const toastTitle = document.getElementById('toastTitle');
+            const toastMessage = document.getElementById('toastMessage');
+            const toastIcon = document.getElementById('toastIcon');
+
+            toastTitle.textContent = title;
+            toastMessage.textContent = message;
+
+            if (isDone) {
+                toastIcon.className = "w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shrink-0";
+                toastIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
+            } else {
+                toastIcon.className = "w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shrink-0";
+                toastIcon.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i>`;
+            }
+
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+
+            if (isDone) {
+                setTimeout(() => {
+                    toast.classList.remove('translate-y-0', 'opacity-100');
+                    toast.classList.add('translate-y-20', 'opacity-0');
+                }, 3000);
+            }
+        };
+
+        // --- Cart & Bulk Quote Functions ---
+        const toggleCartDrawer = () => {
+            const drawer = document.getElementById('cartDrawer');
+            const backdrop = document.getElementById('cartDrawerBackdrop');
+            const isOpen = drawer.classList.contains('translate-x-full');
+            if (isOpen) {
+                drawer.classList.remove('translate-x-full');
+                backdrop.classList.remove('hidden');
+                renderCartDrawerItems();
+                document.body.style.overflow = 'hidden';
+            } else {
+                drawer.classList.add('translate-x-full');
+                backdrop.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        };
+
+        const addToCart = (id) => {
+            const p = furnitureProducts.find(item => item.id === id);
+            if (!p || p.stockStatus === "Out of Stock") return;
+            const existing = cart.find(item => item.id === id);
+            if (existing) {
+                existing.qty += 1;
+            } else {
+                const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+                cart.push({ id: p.id, name: p.name, priceNum: p.priceNum, image: img, qty: 1, finish: 'Standard Polish' });
+            }
+            persistData();
+            toggleCartDrawer();
+        };
+
+        const updateCartQty = (id, change) => {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += change;
+            if (item.qty <= 0) {
+                cart = cart.filter(i => i.id !== id);
+            }
+            persistData();
+            renderCartDrawerItems();
+        };
+
+        const updateCartFinish = (id, finishVal) => {
+            const item = cart.find(i => i.id === id);
+            if (item) { item.finish = finishVal; persistData(); }
+        };
+
+        const renderCartDrawerItems = () => {
+            const container = document.getElementById('cartItemsContainer');
+            const totalEl = document.getElementById('cartTotalPrice');
+            if (cart.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-stone-400 text-sm">Your inquiry cart is empty. Browse items and add them for a bulk quote!</div>`;
+                totalEl.textContent = 'LKR 0';
                 return;
             }
 
-            noResults.classList.add('hidden');
-            grid.innerHTML = items.map(product => `
-                <div class="bg-white rounded-2xl border border-stone-200 overflow-hidden hover:shadow-lg transition group">
-                    <div class="h-48 overflow-hidden bg-stone-100">
-                        <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                    </div>
-                    <div class="p-5 flex flex-col justify-between">
-                        <div>
-                            <span class="text-xs font-semibold text-brand-600 uppercase tracking-wider">${product.category}</span>
-                            <h3 class="text-lg font-bold text-stone-900 mt-1">${product.name}</h3>
+            let totalSum = 0;
+            container.innerHTML = cart.map(item => {
+                const itemTotal = item.priceNum * item.qty;
+                totalSum += itemTotal;
+                return `
+                    <div class="pt-4 first:pt-0 flex gap-4 items-start">
+                        <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover border shrink-0">
+                        <div class="flex-1">
+                            <h4 class="font-serif font-bold text-stone-900 text-sm">${item.name}</h4>
+                            <div class="text-xs text-brand-700 font-bold mb-1">${formatCurrency(item.priceNum)} each</div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="text-[10px] text-stone-500 uppercase font-semibold">Finish:</label>
+                                <select onchange="updateCartFinish(${item.id}, this.value)" class="text-xs bg-stone-100 border border-stone-200 rounded px-2 py-1 focus:outline-none">
+                                    <option value="Standard Polish" ${item.finish === 'Standard Polish' ? 'selected' : ''}>Standard Polish</option>
+                                    <option value="Matte Walnut" ${item.finish === 'Matte Walnut' ? 'selected' : ''}>Matte Walnut</option>
+                                    <option value="Gloss Teak" ${item.finish === 'Gloss Teak' ? 'selected' : ''}>Gloss Teak</option>
+                                    <option value="Dark Mahogany" ${item.finish === 'Dark Mahogany' ? 'selected' : ''}>Dark Mahogany</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 border border-stone-200 rounded-lg px-2 py-1 bg-stone-50">
+                                    <button onclick="updateCartQty(${item.id}, -1)" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                    <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
+                                    <button onclick="updateCartQty(${item.id}, 1)" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                                </div>
+                                <span class="text-xs font-bold text-stone-900">${formatCurrency(itemTotal)}</span>
+                            </div>
                         </div>
-                        <div class="mt-4 flex items-center justify-between">
-                            <span class="text-lg font-bold text-stone-900">LKR ${product.price.toLocaleString()}</span>
-                            <button onclick="addToCart(${product.id})" class="bg-stone-900 text-white p-2.5 rounded-xl hover:bg-brand-600 transition">
-                                <i class="fa-solid fa-plus"></i>
-                            </button>
+                    </div>
+                `;
+            }).join('');
+            totalEl.textContent = formatCurrency(totalSum);
+        };
+
+        const updateCartBadge = () => {
+            const count = cart.reduce((acc, item) => acc + item.qty, 0);
+            document.getElementById('cartBadgeCount').textContent = count;
+            document.getElementById('mobileCartBadgeCount').textContent = count;
+        };
+
+        const submitCartWhatsApp = () => {
+            if (cart.length === 0) return;
+            trackContactClick('Bulk Cart WhatsApp');
+            let msg = "Hello Emarko Furniture, I would like to request a quote for the following items:\n\n";
+            let total = 0;
+            cart.forEach((i, idx) => {
+                msg += `${idx + 1}. *${i.name}* (Qty: ${i.qty}) - Finish: ${i.finish} - ${formatCurrency(i.priceNum * i.qty)}\n`;
+                total += i.priceNum * i.qty;
+            });
+            msg += `\n*Estimated Total:* ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
+            window.open(`https://wa.me/94773484343?text=${encodeURIComponent(msg)}`, '_blank');
+        };
+
+        const submitCartEmail = () => {
+            if (cart.length === 0) return;
+            trackContactClick('Bulk Cart Email');
+            let subject = "Bulk Furniture Inquiry / Quote Request - Emarko";
+            let body = "Hello Emarko Furniture,\n\nI would like to request a quote for the following items:\n\n";
+            let total = 0;
+            cart.forEach((i, idx) => {
+                body += `${idx + 1}. ${i.name} (Qty: ${i.qty}) - Finish: ${i.finish} - ${formatCurrency(i.priceNum * i.qty)}\n`;
+                total += i.priceNum * i.qty;
+            });
+            body += `\nEstimated Total: ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
+            window.location.href = `mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+        };
+
+        // --- Filtering / Sorting / Rendering ---
+        const handleSliderInput = (val) => {
+            const valNum = parseInt(val);
+            const inputEl = document.getElementById('customMaxPriceInput');
+            if (valNum >= 505000) {
+                inputEl.value = '';
+            } else {
+                inputEl.value = valNum;
+            }
+            handleAdvancedFilters();
+        };
+
+        const handleCustomPriceInput = (val) => {
+            const sliderEl = document.getElementById('priceRangeSlider');
+            if (val.length > 8) {
+                val = val.slice(0, 8);
+                document.getElementById('customMaxPriceInput').value = val;
+            }
+            if (!val || parseInt(val) <= 0) {
+                sliderEl.value = 505000;
+            } else {
+                const num = parseInt(val);
+                if (num >= 505000) {
+                    sliderEl.value = 505000;
+                } else {
+                    sliderEl.value = Math.max(5000, num);
+                }
+            }
+            handleAdvancedFilters();
+        };
+
+        const handleAdvancedFilters = () => {
+            const customVal = document.getElementById('customMaxPriceInput').value.trim();
+            const sliderVal = parseInt(document.getElementById('priceRangeSlider').value);
+            let maxPrice = Infinity;
+
+            if (customVal !== '' && parseInt(customVal) > 0) {
+                maxPrice = parseInt(customVal);
+                document.getElementById('priceRangeLabel').textContent = formatCurrency(maxPrice);
+            } else if (sliderVal < 505000) {
+                maxPrice = sliderVal;
+                document.getElementById('priceRangeLabel').textContent = formatCurrency(maxPrice);
+            } else {
+                maxPrice = Infinity;
+                document.getElementById('priceRangeLabel').textContent = 'Unlimited';
+            }
+
+            const inStockOnly = document.getElementById('inStockOnlyCheckbox').checked;
+            const sortBy = document.getElementById('sortDropdown').value;
+
+            let filtered = furnitureProducts.filter(p => {
+                const matchCat = currentFilterCategory === 'all' || p.category.toLowerCase() === currentFilterCategory.toLowerCase();
+                const matchPrice = maxPrice === Infinity || p.priceNum <= maxPrice;
+                const matchStock = !inStockOnly || p.stockStatus === "In Stock";
+                return matchCat && matchPrice && matchStock;
+            });
+
+            if (sortBy === 'priceLowHigh') filtered.sort((a, b) => a.priceNum - b.priceNum);
+            else if (sortBy === 'priceHighLow') filtered.sort((a, b) => b.priceNum - a.priceNum);
+            else if (sortBy === 'newest') filtered.sort((a, b) => b.createdAt - a.createdAt);
+
+            renderProductsList(filtered, currentFilterCategory === 'all' ? "Featured Furniture Catalog" : `${currentFilterCategory} Collection`, currentFilterCategory === 'all');
+        };
+
+        const renderProductsList = (items, title, isAllTab) => {
+            const grid = document.getElementById('productGrid');
+            document.getElementById('catalogTitle').textContent = title;
+            const seeMore = document.getElementById('seeMoreContainer');
+
+            let displayed = items;
+            if (isAllTab && !showAllCatalog && items.length > 15) {
+                displayed = items.slice(0, 15);
+                seeMore.classList.remove('hidden');
+            } else {
+                seeMore.classList.add('hidden');
+            }
+
+            if (displayed.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-16 text-stone-500">No items found matching your filters.</div>`;
+                return;
+            }
+
+            grid.innerHTML = displayed.map(p => {
+                const isOut = p.stockStatus === "Out of Stock";
+                const displayImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+                const imageCountBadge = (p.images && p.images.length > 1) ? `<span class="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-images"></i> ${p.images.length}</span>` : '';
+
+                return `
+                    <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition flex flex-col group relative ${isOut ? 'opacity-90' : ''}">
+                        <div class="relative h-64 overflow-hidden bg-stone-100 cursor-pointer" onclick="openProductModal(${p.id})">
+                            <img src="${displayImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                            <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center">
+                                <span class="bg-stone-900/80 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full">${p.badge}</span>
+                                ${p.onSale ? '<span class="bg-amber-600 text-white text-xs px-3 py-1 rounded-full font-bold">Sale</span>' : ''}
+                                ${isOut ? '<span class="bg-rose-600 text-white text-xs px-3 py-1 rounded-full font-bold">Out of Stock</span>' : ''}
+                                ${imageCountBadge}
+                            </div>
+                            <div class="absolute top-3 right-3"><span class="bg-brand-600 text-white text-xs px-3 py-1 rounded-semibold">${p.category}</span></div>
+                        </div>
+                        <div class="p-6 flex-1 flex flex-col justify-between">
+                            <div class="cursor-pointer" onclick="openProductModal(${p.id})">
+                                <span class="text-xs text-brand-600 font-bold uppercase tracking-wider block mb-1">${p.subCategory}</span>
+                                <h3 class="font-serif text-xl font-bold text-stone-900 mb-2 group-hover:text-brand-700 transition">${p.name}</h3>
+                                <div class="text-brand-800 font-bold text-lg mb-4">${formatCurrency(p.priceNum)}</div>
+                            </div>
+                            <div class="flex items-center gap-2 pt-3 border-t border-stone-100">
+                                <button onclick="openProductModal(${p.id})" class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-bold transition">View Details</button>
+                                ${isOut ? '<button disabled class="bg-stone-200 text-stone-400 px-4 py-2.5 rounded-xl text-xs font-bold cursor-not-allowed">Out of Stock</button>' : '<button onclick="addToCart(' + p.id + ')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"><i class="fa-solid fa-bag-shopping"></i> Add to Quote</button>'}
+                            </div>
                         </div>
                     </div>
-                </div>
+                `;
+            }).join('');
+        };
+
+        const showAllItems = () => { showAllCatalog = true; handleAdvancedFilters(); };
+
+        const handleLiveSearch = (query, scroll = false) => {
+            const keyword = query.trim();
+            if (keyword === "Owner1234") {
+                document.getElementById('headerSearchInput').value = "";
+                document.getElementById('mobileSearchInput').value = "";
+                openOwnerDashboard();
+                return;
+            }
+
+            const lowerKeyword = keyword.toLowerCase();
+            if (!lowerKeyword) { showAllCatalog = false; handleAdvancedFilters(); return; }
+            const res = furnitureProducts.filter(p => p.name.toLowerCase().includes(lowerKeyword) || p.category.toLowerCase().includes(lowerKeyword) || p.description.toLowerCase().includes(lowerKeyword));
+            renderProductsList(res, `Search Results for "${query}"`, false);
+            if (scroll) document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+        };
+
+        const handleSearchKeydown = (e, q) => { if (e.key === 'Enter') { e.preventDefault(); handleLiveSearch(q, true); e.target.blur(); } };
+
+        // --- Product Modal & Lightbox Zoom ---
+        const openProductModal = (id) => {
+            const p = furnitureProducts.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('modalCategory').textContent = `${p.category} / ${p.subCategory}`;
+            document.getElementById('modalTitle').textContent = p.name;
+            document.getElementById('modalPrice').textContent = formatCurrency(p.priceNum);
+            document.getElementById('modalDescription').textContent = p.description;
+            document.getElementById('modalDimensions').textContent = p.dimensions;
+            document.getElementById('modalWarranty').textContent = p.warranty;
+            document.getElementById('modalBadge').textContent = p.badge;
+
+            const isOut = p.stockStatus === "Out of Stock";
+            const stockBadge = document.getElementById('modalStockBadge');
+            const actionContainer = document.getElementById('modalActionContainer');
+
+            if (isOut) {
+                stockBadge.textContent = "Out of Stock";
+                stockBadge.className = "bg-rose-600 text-white text-xs px-3 py-1 rounded-full font-bold block";
+                actionContainer.innerHTML = `<div class="bg-rose-50 text-rose-700 p-3 rounded-xl text-center text-xs font-semibold">Currently out of stock.</div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="https://wa.me/94773484343?text=${encodeURIComponent(`Hi, is "${p.name}" resting soon?`)}" onclick="trackContactClick('${p.name} (Restock WhatsApp)')" target="_blank" class="bg-stone-800 hover:bg-stone-900 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp</a>
+                        <a href="mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(`Restock Inquiry: ${p.name}`)}" onclick="trackContactClick('${p.name} (Restock Email)')" class="bg-stone-700 hover:bg-stone-800 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-sm"></i> Email</a>
+                    </div>`;
+            } else {
+                stockBadge.className = "hidden";
+                actionContainer.innerHTML = `
+                    <button onclick="closeProductModal(); addToCart(${p.id});" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 px-6 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2"><i class="fa-solid fa-bag-shopping"></i> Add to Inquiry Cart</button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <a href="https://wa.me/94773484343?text=${encodeURIComponent(`Hi, I'm interested in "${p.name}" (${formatCurrency(p.priceNum)}).`)}" onclick="trackContactClick('${p.name} (WhatsApp)')" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry</a>
+                        <a href="mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(`Inquiry for ${p.name}`)}&body=${encodeURIComponent(`Hello Emarko Furniture,\n\nI am interested in purchasing/inquiring about:\nItem: ${p.name}\nPrice:${formatCurrency(p.priceNum)}\n\nPlease contact me with more details.`)}" onclick="trackContactClick('${p.name} (Email)')" class="bg-rose-600 hover:bg-rose-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-base"></i> Email Inquiry</a>
+                    </div>`;
+            }
+
+            const galleryImgs = (p.images && p.images.length > 0) ? p.images : ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"];
+
+            document.getElementById('modalMainImage').src = galleryImgs[0];
+            document.getElementById('modalThumbnails').innerHTML = galleryImgs.map((img, i) => `
+                <button onclick="changeModalMainImage('${img}', this)" class="modal-thumb-btn w-16 h-16 rounded-xl overflow-hidden border-2 shrink-0 ${i === 0 ? 'border-brand-600' : 'border-transparent'}">
+                    <img src="${img}" class="w-full h-full object-cover">
+                </button>
             `).join('');
-        }
-
-        // Category Filter with fixed matching logic for "Living"
-        function filterProducts(category) {
-            currentFilterCategory = category;
             
+            const modal = document.getElementById('productModal');
+            modal.classList.remove('hidden'); modal.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const changeModalMainImage = (imgSrc, btn) => {
+            document.getElementById('modalMainImage').src = imgSrc;
+            document.querySelectorAll('.modal-thumb-btn').forEach(b => {
+                b.classList.remove('border-brand-600');
+                b.classList.add('border-transparent');
+            });
+            btn.classList.remove('border-transparent');
+            btn.classList.add('border-brand-600');
+        };
+
+        const closeProductModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('productModal').classList.remove('flex'); document.body.style.overflow = 'auto'; };
+
+        const openLightbox = (imgSrc) => {
+            document.getElementById('lightboxImg').src = imgSrc;
+            const lb = document.getElementById('lightboxModal');
+            lb.classList.remove('hidden'); lb.classList.add('flex');
+        };
+        const closeLightbox = () => {
+            const lb = document.getElementById('lightboxModal');
+            lb.classList.add('hidden'); lb.classList.remove('flex');
+        };
+
+        // --- Owner Dashboard & CSV Export ---
+        const openOwnerDashboard = () => {
+            updateDashboardStats();
+            document.getElementById('dashboardCategoryFilter').value = 'all';
+            document.getElementById('dashboardSearch').value = '';
+            renderDashboardInventory(furnitureProducts);
+            const dash = document.getElementById('ownerDashboardModal');
+            dash.classList.remove('hidden'); dash.classList.add('flex');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeOwnerDashboard = () => { document.getElementById('ownerDashboardModal').classList.add('hidden'); document.getElementById('ownerDashboardModal').classList.remove('flex'); document.body.style.overflow = 'auto'; handleAdvancedFilters(); };
+
+        const updateDashboardStats = () => {
+            document.getElementById('statWhatsAppClicks').textContent = clickAnalytics.totalClicks || 0;
+            document.getElementById('statTotalProducts').textContent = furnitureProducts.length;
+            document.getElementById('statOutOfStock').textContent = furnitureProducts.filter(p => p.stockStatus === "Out of Stock").length;
+        };
+
+        const renderDashboardInventory = (items) => {
+            const tbody = document.getElementById('inventoryTableBody');
+            if (items.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-stone-400">No items found.</td></tr>`; return; }
+            tbody.innerHTML = items.map(p => {
+                const isOut = p.stockStatus === "Out of Stock";
+                const displayImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+                return `
+                    <tr class="hover:bg-stone-50 transition">
+                        <td class="p-4 flex items-center gap-3">
+                            <img src="${displayImg}" class="w-12 h-12 rounded-xl object-cover border shrink-0">
+                            <div>
+                                <strong class="text-stone-900 text-sm">${p.name}</strong>
+                                <span class="text-xs text-stone-500 block">${p.subCategory} (${p.images ? p.images.length : 0} image/s)</span>
+                            </div>
+                        </td>
+                        <td class="p-4 text-xs font-semibold">${p.category}</td>
+                        <td class="p-4 font-bold text-brand-800">${formatCurrency(p.priceNum)}</td>
+                        <td class="p-4"><button onclick="toggleProductStock(${p.id})" class="px-3 py-1.5 rounded-full text-xs font-bold ${isOut ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.stockStatus}</button></td>
+                        <td class="p-4"><button onclick="toggleSaleStatus(${p.id})" class="px-3 py-1 rounded-lg text-xs font-bold ${p.onSale ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-600'}">${p.onSale ? 'On Sale' : 'Normal'}</button></td>
+                        <td class="p-4 text-center space-x-2">
+                            <button onclick="openEditProductModal(${p.id})" class="p-2 bg-stone-100 hover:bg-brand-600 hover:text-white rounded-xl"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteProduct(${p.id})" class="p-2 bg-stone-100 hover:bg-rose-600 hover:text-white rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        };
+
+        const filterDashboardInventory = () => {
+            const q = document.getElementById('dashboardSearch').value.toLowerCase();
+            const cat = document.getElementById('dashboardCategoryFilter').value;
+            renderDashboardInventory(furnitureProducts.filter(p => (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) && (cat === 'all' || p.category === cat)));
+        };
+
+        const toggleProductStock = async (id) => { 
+            const p = furnitureProducts.find(item => item.id === id); 
+            if (p) { 
+                const newStatus = p.stockStatus === "Out of Stock" ? "In Stock" : "Out of Stock";
+                const { error } = await db.from('products').update({ stock_status: newStatus }).eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    updateDashboardStats(); 
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
+
+        const toggleSaleStatus = async (id) => { 
+            const p = furnitureProducts.find(item => item.id === id); 
+            if (p) { 
+                const newSaleState = !p.onSale;
+                const { error } = await db.from('products').update({ on_sale: newSaleState }).eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
+
+        const deleteProduct = async (id) => { 
+            if (confirm("Delete this item?")) { 
+                const { error } = await db.from('products').delete().eq('id', id);
+                if (!error) {
+                    await fetchProducts();
+                    updateDashboardStats(); 
+                    filterDashboardInventory(); 
+                }
+            } 
+        };
+
+        const exportAnalyticsCSV = () => {
+            let csvRows = [];
+            csvRows.push(["Source/Item", "Click Count"]);
+            csvRows.push(["Total Contact Clicks", clickAnalytics.totalClicks || 0]);
+            
+            for (const [key, val] of Object.entries(clickAnalytics.items || {})) {
+                csvRows.push([key, val]);
+            }
+
+            let csvContent = csvRows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(",")).join("\n");
+            
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.setAttribute("href", url);
+            link.setAttribute("download", "emarko_leads_report.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        const previewSelectedFiles = (input) => {
+            const badge = document.getElementById('selectedFilesBadge');
+            const countSpan = document.getElementById('selectedFilesCount');
+            if (input.files && input.files.length > 0) {
+                countSpan.textContent = `${input.files.length} image file(s) selected`;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        };
+
+        const openAddProductModal = () => {
+            document.getElementById('editorModalTitle').textContent = "Add Furniture Item";
+            document.getElementById('submitProductBtn').innerHTML = `<i class="fa-solid fa-plus"></i> Add Product`;
+            document.getElementById('productForm').reset();
+            document.getElementById('editProductId').value = "";
+            document.getElementById('selectedFilesBadge').classList.add('hidden');
+            document.getElementById('uploadProgressContainer').classList.add('hidden');
+            document.getElementById('productEditorModal').classList.remove('hidden'); 
+            document.getElementById('productEditorModal').classList.add('flex');
+        };
+
+        const openEditProductModal = (id) => {
+            const p = furnitureProducts.find(item => item.id === id);
+            if (!p) return;
+            document.getElementById('editorModalTitle').textContent = "Edit Furniture Item";
+            document.getElementById('submitProductBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
+            document.getElementById('editProductId').value = p.id;
+            document.getElementById('formName').value = p.name;
+            document.getElementById('formCategory').value = p.category;
+            document.getElementById('formSubCategory').value = p.subCategory;
+            document.getElementById('formNumericPrice').value = p.priceNum;
+            document.getElementById('formBadge').value = p.badge;
+            document.getElementById('formDescription').value = p.description;
+            document.getElementById('formDimensions').value = p.dimensions;
+            document.getElementById('formWarranty').value = p.warranty;
+            document.getElementById('formStockStatus').value = p.stockStatus;
+            document.getElementById('formImageUrl').value = (p.images && p.images.length > 0) ? p.images.join(', ') : '';
+            document.getElementById('selectedFilesBadge').classList.add('hidden');
+            document.getElementById('uploadProgressContainer').classList.add('hidden');
+            document.getElementById('productEditorModal').classList.remove('hidden'); 
+            document.getElementById('productEditorModal').classList.add('flex');
+        };
+
+        const closeProductEditor = () => { document.getElementById('productEditorModal').classList.add('hidden'); document.getElementById('productEditorModal').classList.remove('flex'); };
+
+        // Helper function to read file asynchronously with progress tracking
+        const readFileAsDataURL = (file, onProgress) => {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onprogress = (e) => {
+                    if (e.lengthComputable && onProgress) {
+                        onProgress(e.loaded / e.total);
+                    }
+                };
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = (err) => reject(err);
+                reader.readAsDataURL(file);
+            });
+        };
+
+        // --- Save Form Function with Progress Bar & Background Task Processing ---
+        const saveProductForm = async (e) => {
+            e.preventDefault();
+
+            // Extract Form Values
+            const editId = document.getElementById('editProductId').value;
+            const name = document.getElementById('formName').value;
+            const category = document.getElementById('formCategory').value;
+            const subCategory = document.getElementById('formSubCategory').value;
+            const priceNum = parseInt(document.getElementById('formNumericPrice').value) || 50000;
+            const badge = document.getElementById('formBadge').value;
+            const description = document.getElementById('formDescription').value;
+            const dimensions = document.getElementById('formDimensions').value;
+            const warranty = document.getElementById('formWarranty').value;
+            const stockStatus = document.getElementById('formStockStatus').value;
+
+            const rawUrlInput = document.getElementById('formImageUrl').value.trim();
+            const fileInput = document.getElementById('formImageFile');
+            const files = fileInput.files;
+
+            // Immediately close editor modal for seamless background processing
+            closeProductEditor();
+
+            // Show Toast Notification that process has started in background
+            showToast('Adding Product...', 'Processing images & publishing item in background.');
+
+            // Perform image processing and Supabase sync asynchronously in the background
+            setTimeout(async () => {
+                try {
+                    let compiledImages = [];
+
+                    // 1. Process URL inputs if provided
+                    if (rawUrlInput) {
+                        const urls = rawUrlInput.split(',').map(u => u.trim()).filter(u => u.length > 0);
+                        compiledImages.push(...urls);
+                    }
+
+                    // 2. Process local files if provided
+                    if (files && files.length > 0) {
+                        const totalFiles = files.length;
+                        for (let i = 0; i < totalFiles; i++) {
+                            const dataUrl = await readFileAsDataURL(files[i]);
+                            compiledImages.push(dataUrl);
+                        }
+                    }
+
+                    // Fallback default image if none supplied
+                    if (compiledImages.length === 0) {
+                        compiledImages.push('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800');
+                    }
+
+                    const payload = {
+                        name: name,
+                        category: category,
+                        sub_category: subCategory,
+                        price_num: priceNum,
+                        badge: badge,
+                        description: description,
+                        dimensions: dimensions,
+                        warranty: warranty,
+                        stock_status: stockStatus,
+                        on_sale: false,
+                        images: compiledImages
+                    };
+
+                    if (editId) {
+                        const { error } = await db.from('products').update(payload).eq('id', editId);
+                        if (error) console.error('Error updating product:', error);
+                    } else {
+                        const { error } = await db.from('products').insert([payload]);
+                        if (error) console.error('Error inserting product:', error);
+                    }
+
+                    // Refresh store inventory and views
+                    await fetchProducts();
+                    updateDashboardStats();
+                    filterDashboardInventory();
+
+                    // Notify success
+                    showToast('Product Added!', `"${name}" has been published successfully.`, true);
+
+                } catch (err) {
+                    console.error('Background task failed:', err);
+                    showToast('Upload Error', 'Failed to save product completely.', true);
+                }
+            }, 100);
+        };
+
+        const filterProducts = (category) => {
+            currentFilterCategory = category;
             document.querySelectorAll('.filter-btn').forEach(btn => {
-                const btnText = btn.textContent.trim().toLowerCase();
-                const targetCategory = category.toLowerCase();
-
-                // Match exact category OR handle shorthand labels (e.g. "living" matching "living room")
-                const isMatch = (btnText === targetCategory) ||
-                                (targetCategory === 'living room' && btnText === 'living') ||
-                                (category === 'all' && btnText === 'all');
-
+                const text = btn.textContent.trim().toLowerCase();
+                const target = category.toLowerCase();
+                const isMatch = text === target || (target === 'living room' && text === 'living') || (category === 'all' && text === 'all');
+                
                 if (isMatch) {
-                    btn.classList.add('bg-white', 'text-stone-900', 'shadow-sm'); 
+                    btn.classList.add('active', 'bg-white', 'text-stone-900', 'shadow-sm'); 
                     btn.classList.remove('text-stone-600');
                 } else {
-                    btn.classList.remove('bg-white', 'text-stone-900', 'shadow-sm'); 
+                    btn.classList.remove('active', 'bg-white', 'text-stone-900', 'shadow-sm'); 
                     btn.classList.add('text-stone-600');
                 }
             });
-
             handleAdvancedFilters();
-        }
+        };
 
-        // Price Input Synchronization
-        function syncPriceFromSlider(value) {
-            const manualInput = document.getElementById('priceInputManual');
-            if (parseInt(value) >= 10000000) {
-                manualInput.value = '';
-            } else {
-                manualInput.value = value;
-            }
-            handleAdvancedFilters();
-        }
+        const filterBySubCategory = (cat, sub) => {
+            currentFilterCategory = cat;
+            const res = furnitureProducts.filter(p => p.category.toLowerCase() === cat.toLowerCase() && p.subCategory.toLowerCase() === sub.toLowerCase());
+            renderProductsList(res, sub, false);
+            document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+        };
 
-        function syncPriceFromInput(value) {
-            const slider = document.getElementById('priceRangeSlider');
-            // Restrict input length to max 8 digits
-            if (value.length > 8) {
-                value = value.slice(0, 8);
-                document.getElementById('priceInputManual').value = value;
-            }
+        const toggleMobileMenu = () => document.getElementById('mobileMenu').classList.toggle('hidden');
 
-            const numValue = parseInt(value);
-            if (!isNaN(numValue) && numValue <= 10000000) {
-                slider.value = numValue;
-            } else if (value === '') {
-                slider.value = 10000000;
-            }
-            handleAdvancedFilters();
-        }
-
-        // Filter Logic Function
-        function handleAdvancedFilters() {
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            const manualVal = document.getElementById('priceInputManual').value;
-            const sliderVal = document.getElementById('priceRangeSlider').value;
-            const displayLabel = document.getElementById('priceDisplayLabel');
-
-            let maxPrice = Infinity;
-
-            if (manualVal !== '' && !isNaN(parseInt(manualVal))) {
-                maxPrice = parseInt(manualVal);
-                displayLabel.textContent = `≤ LKR ${maxPrice.toLocaleString()}`;
-            } else if (parseInt(sliderVal) < 10000000) {
-                maxPrice = parseInt(sliderVal);
-                displayLabel.textContent = `≤ LKR ${maxPrice.toLocaleString()}`;
-            } else {
-                displayLabel.textContent = 'Unlimited';
-            }
-
-            const filtered = products.filter(product => {
-                const matchesCategory = currentFilterCategory === 'all' || product.category.toLowerCase() === currentFilterCategory.toLowerCase();
-                const matchesSearch = product.name.toLowerCase().includes(searchQuery);
-                const matchesPrice = product.price <= maxPrice;
-
-                return matchesCategory && matchesSearch && matchesPrice;
-            });
-
-            renderProducts(filtered);
-        }
-
-        // Cart Actions
-        function addToCart(productId) {
-            const item = products.find(p => p.id === productId);
-            cart.push(item);
-            updateCartUI();
-        }
-
-        function toggleCart() {
-            const drawer = document.getElementById('cartDrawer');
-            drawer.classList.toggle('opacity-0');
-            drawer.classList.toggle('pointer-events-none');
-        }
-
-        function updateCartUI() {
-            document.getElementById('cartCount').textContent = cart.length;
-            const list = document.getElementById('cartItemsList');
-            
-            list.innerHTML = cart.map((item, index) => `
-                <div class="flex items-center justify-between border-b border-stone-100 pb-3">
-                    <div class="flex items-center gap-3">
-                        <img src="${item.image}" class="w-12 h-12 rounded-lg object-cover">
-                        <div>
-                            <h4 class="text-sm font-semibold text-stone-900">${item.name}</h4>
-                            <span class="text-xs text-stone-500">LKR ${item.price.toLocaleString()}</span>
-                        </div>
-                    </div>
-                    <button onclick="removeFromCart(${index})" class="text-stone-400 hover:text-red-500 text-sm">
-                        <i class="fa-solid fa-trash"></i>
-                    </button>
-                </div>
-            `).join('');
-
-            const total = cart.reduce((sum, item) => sum + item.price, 0);
-            document.getElementById('cartTotal').textContent = `LKR ${total.toLocaleString()}`;
-        }
-
-        function removeFromCart(index) {
-            cart.splice(index, 1);
-            updateCartUI();
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchProducts();
+            updateCartBadge();
+        });
     </script>
 </body>
 </html>
