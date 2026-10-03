@@ -4,29 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emarko Furniture | Premium Handcrafted Living</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <meta name="description" content="Emarko Furniture, Kotte, Sri Lanka. Handcrafted teak and solid wood furniture for living room, bedroom, office and kitchen.">
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Crect width=%27100%27 height=%27100%27 rx=%2724%27 fill=%27%233d2510%27/%3E%3Ctext x=%2750%27 y=%2772%27 font-size=%2770%27 text-anchor=%27middle%27 fill=%27white%27 font-family=%27serif%27%3EE%3C/text%3E%3C/svg%3E">
+    <!-- Prebuilt Tailwind stylesheet (tailwind.css). If the file is missing, the Tailwind CDN is loaded automatically so the site never breaks. -->
+    <script>
+        function loadTailwindCdn() {
+            var s = document.createElement('script');
+            s.src = 'https://cdn.tailwindcss.com';
+            s.onload = function () {
+                tailwind.config = {
+                    theme: { extend: {
+                        fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
+                        colors: { brand: { 50: '#fbf8f5', 100: '#f4ede4', 600: '#8b5a2b', 700: '#704620', 800: '#583618', 900: '#3d2510' } }
+                    } }
+                };
+            };
+            document.head.appendChild(s);
+        }
+    </script>
+    <link rel="stylesheet" href="tailwind.css" onerror="loadTailwindCdn()">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'], serif: ['Playfair Display', 'serif'] },
-                    colors: { brand: { 50: '#fbf8f5', 100: '#f4ede4', 600: '#8b5a2b', 700: '#704620', 800: '#583618', 900: '#3d2510' } }
-                }
-            }
-        }
-    </script>
-    <script>
-        // --- Supabase Credentials Initialization ---
-        const SUPABASE_URL = 'https://bbjkcnqzupncxmguzpwq.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiamtjbnF6dXBuY3htZ3V6cHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NDM1NzEsImV4cCI6MjEwNjUxOTU3MX0.k6jWGLOUnpO1hw_5ID-AWfn5N_F9fBoPuY71donnr8I';
-        
-        // Initialize client instance
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    </script>
 </head>
 <body class="bg-stone-50 text-stone-800 font-sans antialiased selection:bg-brand-600 selection:text-white relative">
 
@@ -42,7 +42,7 @@
     <!-- Header -->
     <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b-[4px] border-brand-600 shadow-sm">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-24 flex items-center justify-between gap-4">
-            <a href="#" class="flex items-center gap-3 group shrink-0">
+            <a href="#" onclick="filterProducts('all')" class="flex items-center gap-3 group shrink-0">
                 <div class="w-11 h-11 bg-brand-900 rounded-xl flex items-center justify-center text-white font-serif font-bold text-xl shadow-md group-hover:bg-brand-800 transition">E</div>
                 <div>
                     <span class="font-serif font-bold text-2xl tracking-tight text-stone-900 block leading-none">Emarko</span>
@@ -60,8 +60,8 @@
 
             <div class="hidden xl:flex items-center gap-5 text-xs text-stone-600 border-l border-stone-200 pl-6">
                 <div class="flex flex-col gap-1">
-                    <a href="tel:0773484343" class="hover:text-brand-700 transition flex items-center gap-1.5 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
-                    <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="hover:text-brand-700 transition flex items-center gap-1.5 truncate max-w-[220px]"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
+                    <a href="tel:0773484343" onclick="trackContactClick('Header Phone')" class="hover:text-brand-700 transition flex items-center gap-1.5 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
+                    <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" rel="noopener" onclick="trackContactClick('Header Location')" class="hover:text-brand-700 transition flex items-center gap-1.5 truncate max-w-[220px]"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
                 </div>
                 <div class="flex items-center gap-2">
                     <button onclick="toggleCartDrawer()" class="relative w-11 h-11 rounded-full bg-brand-50 hover:bg-brand-600 hover:text-white transition text-brand-700 flex items-center justify-center shadow-sm">
@@ -69,10 +69,10 @@
                         <span id="cartBadgeCount" class="absolute -top-1 -right-1 bg-brand-800 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-white">0</span>
                     </button>
                     <!-- Social, WhatsApp & Gmail Icons -->
-                    <a href="https://wa.me/94773484343" onclick="trackContactClick('Header WhatsApp')" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                    <a href="https://wa.me/94773484343" target="_blank" rel="noopener" onclick="trackContactClick('Header WhatsApp')" aria-label="WhatsApp" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-whatsapp text-sm"></i></a>
                     <a href="mailto:emarkofurniture@gmail.com" onclick="trackContactClick('Header Gmail')" aria-label="Gmail" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-red-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-solid fa-envelope text-sm"></i></a>
-                    <a href="https://instagram.com" target="_blank" aria-label="Instagram" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-pink-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-instagram text-sm"></i></a>
-                    <a href="https://facebook.com" target="_blank" aria-label="Facebook" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-blue-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                    <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-pink-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-instagram text-sm"></i></a>
+                    <a href="https://facebook.com" target="_blank" rel="noopener" aria-label="Facebook" class="w-9 h-9 rounded-full bg-stone-100 flex items-center justify-center hover:bg-blue-600 hover:text-white transition text-stone-700 shadow-sm"><i class="fa-brands fa-facebook-f text-sm"></i></a>
                 </div>
             </div>
 
@@ -82,7 +82,7 @@
                     <i class="fa-solid fa-bag-shopping text-base"></i>
                     <span id="mobileCartBadgeCount" class="absolute -top-1 -right-1 bg-brand-800 text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center">0</span>
                 </button>
-                <a href="tel:0773484343" class="p-2.5 text-brand-600 bg-brand-50 rounded-xl"><i class="fa-solid fa-phone text-base"></i></a>
+                <a href="tel:0773484343" onclick="trackContactClick('Mobile Phone')" class="p-2.5 text-brand-600 bg-brand-50 rounded-xl"><i class="fa-solid fa-phone text-base"></i></a>
                 <button onclick="toggleMobileMenu()" class="p-2.5 text-stone-700 hover:text-black"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
         </div>
@@ -175,15 +175,15 @@
                 <div class="text-brand-700 font-bold pt-1 cursor-pointer" onclick="filterProducts('Other'); toggleMobileMenu();">OTHER</div>
             </div>
             <div class="space-y-2 text-xs text-stone-600">
-                <a href="tel:0773484343" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
-                <a href="mailto:emarkofurniture@gmail.com" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-envelope text-brand-600"></i> emarkofurniture@gmail.com</a>
-                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
+                <a href="tel:0773484343" onclick="trackContactClick('Mobile Drawer Phone')" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-phone text-brand-600"></i> 077 348 4343</a>
+                <a href="mailto:emarkofurniture@gmail.com" onclick="trackContactClick('Mobile Drawer Email')" class="flex items-center gap-2 font-semibold text-stone-800 text-sm"><i class="fa-solid fa-envelope text-brand-600"></i> emarkofurniture@gmail.com</a>
+                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" rel="noopener" onclick="trackContactClick('Mobile Drawer Location')" class="flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-600"></i> Mahaniyara Junction, Kotte</a>
             </div>
             <div class="flex items-center gap-3 pt-2">
-                <a href="https://wa.me/94773484343" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-whatsapp text-sm"></i></a>
-                <a href="mailto:emarkofurniture@gmail.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-solid fa-envelope text-sm"></i></a>
-                <a href="https://instagram.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-instagram text-sm"></i></a>
-                <a href="https://facebook.com" target="_blank" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-facebook-f text-sm"></i></a>
+                <a href="https://wa.me/94773484343" target="_blank" rel="noopener" onclick="trackContactClick('Mobile Drawer WhatsApp')" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-whatsapp text-sm"></i></a>
+                <a href="mailto:emarkofurniture@gmail.com" onclick="trackContactClick('Mobile Drawer Email Icon')" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-solid fa-envelope text-sm"></i></a>
+                <a href="https://instagram.com" target="_blank" rel="noopener" onclick="trackContactClick('Mobile Drawer Instagram')" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-instagram text-sm"></i></a>
+                <a href="https://facebook.com" target="_blank" rel="noopener" onclick="trackContactClick('Mobile Drawer Facebook')" class="w-10 h-10 rounded-full bg-stone-100 flex items-center justify-center text-stone-700"><i class="fa-brands fa-facebook-f text-sm"></i></a>
             </div>
         </div>
     </header>
@@ -201,7 +201,7 @@
                 <p class="text-stone-300 text-lg sm:text-xl font-light mb-10 leading-relaxed">Explore our exquisite collection of premium teak, solid wood, and specialized furnishings.</p>
                 <div class="flex flex-wrap items-center gap-4">
                     <a href="#collection" class="bg-brand-600 hover:bg-brand-700 text-white px-8 py-4 rounded-xl font-medium transition shadow-lg">Browse Collection</a>
-                    <a href="#location" class="bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-medium transition flex items-center gap-2"><i class="fa-solid fa-location-dot text-brand-400"></i> Visit Showroom</a>
+                    <a href="#location" onclick="trackContactClick('Hero Showroom')" class="bg-white/10 hover:bg-white/25 backdrop-blur-md text-white border border-white/20 px-8 py-4 rounded-xl font-medium transition flex items-center gap-2"><i class="fa-solid fa-location-dot text-amber-300"></i> Visit Showroom</a>
                 </div>
             </div>
         </div>
@@ -216,14 +216,14 @@
             </div>
             <!-- Category Buttons -->
             <div class="flex flex-wrap items-center gap-1.5 bg-stone-200/60 p-1.5 rounded-2xl self-start">
-                <button onclick="filterProducts('all')" class="filter-btn active px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition bg-white text-stone-900 shadow-sm">All</button>
-                <button onclick="filterProducts('Living Room')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Living</button>
-                <button onclick="filterProducts('Bedroom')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Bedroom</button>
-                <button onclick="filterProducts('Office')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Office</button>
-                <button onclick="filterProducts('Kitchen')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Kitchen</button>
-                <button onclick="filterProducts('Mattress')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Mattress</button>
-                <button onclick="filterProducts('Plastic')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Plastic</button>
-                <button onclick="filterProducts('Other')" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Other</button>
+                <button onclick="filterProducts('all')" data-cat="all" class="filter-btn active px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition bg-white text-stone-900 shadow-sm">All</button>
+                <button onclick="filterProducts('Living Room')" data-cat="Living Room" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Living</button>
+                <button onclick="filterProducts('Bedroom')" data-cat="Bedroom" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Bedroom</button>
+                <button onclick="filterProducts('Office')" data-cat="Office" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Office</button>
+                <button onclick="filterProducts('Kitchen')" data-cat="Kitchen" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Kitchen</button>
+                <button onclick="filterProducts('Mattress')" data-cat="Mattress" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Mattress</button>
+                <button onclick="filterProducts('Plastic')" data-cat="Plastic" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Plastic</button>
+                <button onclick="filterProducts('Other')" data-cat="Other" class="filter-btn px-3 py-2 rounded-xl text-xs sm:text-sm font-medium text-stone-600 hover:text-stone-900 transition">Other</button>
             </div>
         </div>
 
@@ -239,7 +239,7 @@
                 </div>
                 <div class="flex items-center gap-2">
                     <label class="text-xs text-stone-600 font-semibold whitespace-nowrap">Custom Max:</label>
-                    <input type="number" id="customMaxPriceInput" maxlength="8" placeholder="Unlimited" oninput="handleCustomPriceInput(this.value)" class="w-28 bg-stone-100 text-xs px-2.5 py-1.5 rounded-xl border border-stone-200 focus:outline-none focus:border-brand-600 font-semibold text-stone-800">
+                    <input type="number" id="customMaxPriceInput" placeholder="Unlimited" oninput="handleCustomPriceInput(this.value)" class="w-28 bg-stone-100 text-xs px-2.5 py-1.5 rounded-xl border border-stone-200 focus:outline-none focus:border-brand-600 font-semibold text-stone-800">
                 </div>
                 <div class="flex items-center gap-2">
                     <label class="text-xs text-stone-600 font-semibold whitespace-nowrap"><input type="checkbox" id="inStockOnlyCheckbox" onchange="handleAdvancedFilters()" class="accent-brand-600 mr-1.5"> In Stock Only</label>
@@ -291,7 +291,7 @@
                                 <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-ruler-combined"></i></div>
                                 <div><strong class="text-stone-900 block text-xs uppercase">Dimensions</strong><span id="modalDimensions"></span></div>
                             </div>
-                            <div class="flex items-center gap-3 text-stone-700 pt-2 border-t border-stone-200">
+                            <div id="modalWarrantyRow" class="flex items-center gap-3 text-stone-700 pt-2 border-t border-stone-200">
                                 <div class="w-8 h-8 rounded-xl bg-brand-50 text-brand-600 flex items-center justify-center shrink-0"><i class="fa-solid fa-shield-halved"></i></div>
                                 <div><strong class="text-stone-900 block text-xs uppercase">Warranty</strong><span id="modalWarranty"></span></div>
                             </div>
@@ -350,13 +350,14 @@
                     <div class="flex flex-wrap items-center gap-3">
                         <button onclick="exportAnalyticsCSV()" class="bg-stone-800 hover:bg-stone-700 text-stone-200 px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2"><i class="fa-solid fa-file-arrow-down"></i> Export Leads CSV</button>
                         <button onclick="openAddProductModal()" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2"><i class="fa-solid fa-plus"></i> Add Item</button>
+                        <button onclick="signOutOwner()" class="bg-stone-800 hover:bg-rose-700 text-stone-200 px-4 py-2.5 rounded-xl font-semibold text-xs transition flex items-center gap-2"><i class="fa-solid fa-right-from-bracket"></i> Sign Out</button>
                         <button onclick="closeOwnerDashboard()" class="w-10 h-10 bg-stone-800 hover:bg-stone-700 text-stone-300 rounded-xl flex items-center justify-center"><i class="fa-solid fa-xmark text-lg"></i></button>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 p-6 bg-stone-100 border-b border-stone-200">
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 flex items-center gap-4">
                         <div class="w-12 h-12 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-hand-pointer"></i></div>
-                        <div><span class="text-xs text-stone-500 font-bold uppercase">Contact Clicks</span><span id="statWhatsAppClicks" class="text-2xl font-bold text-stone-900">0</span></div>
+                        <div><span class="text-xs text-stone-500 font-bold uppercase">Contact Clicks (this device)</span><span id="statWhatsAppClicks" class="text-2xl font-bold text-stone-900">0</span></div>
                     </div>
                     <div class="bg-white p-5 rounded-2xl shadow-sm border border-stone-200 flex items-center gap-4">
                         <div class="w-12 h-12 bg-amber-50 text-amber-600 rounded-xl flex items-center justify-center text-xl"><i class="fa-solid fa-boxes-stacked"></i></div>
@@ -397,6 +398,23 @@
         </div>
     </div>
 
+    <!-- Owner Login Modal -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm hidden items-center justify-center p-4" onclick="if(event.target === this) closeLoginModal()">
+        <form onsubmit="submitLogin(event)" class="bg-white rounded-3xl max-w-sm w-full p-8 shadow-2xl space-y-4">
+            <div>
+                <h3 class="font-serif text-2xl font-bold text-stone-900">Owner Login</h3>
+                <p class="text-xs text-stone-500 mt-1">Sign in to manage your products.</p>
+            </div>
+            <input type="email" id="loginEmail" autocomplete="username" placeholder="Email" required class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none focus:border-brand-600">
+            <input type="password" id="loginPassword" autocomplete="current-password" placeholder="Password" required class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none focus:border-brand-600">
+            <p id="loginError" class="hidden text-xs text-rose-600 font-semibold"></p>
+            <div class="grid grid-cols-2 gap-3 pt-1">
+                <button type="button" onclick="closeLoginModal()" class="bg-stone-200 hover:bg-stone-300 py-3 rounded-xl font-semibold text-sm">Cancel</button>
+                <button type="submit" id="loginSubmitBtn" class="bg-brand-600 hover:bg-brand-700 text-white py-3 rounded-xl font-semibold text-sm disabled:opacity-60">Sign In</button>
+            </div>
+        </form>
+    </div>
+
     <!-- Product Editor Modal -->
     <div id="productEditorModal" class="fixed inset-0 z-50 bg-stone-950/80 backdrop-blur-sm hidden overflow-y-auto p-4 flex items-center justify-center" onclick="if(event.target === this) closeProductEditor()">
         <div class="bg-white rounded-3xl max-w-xl w-full p-6 sm:p-8 shadow-2xl relative my-auto">
@@ -429,12 +447,17 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Price (LKR Numbers)</label>
-                        <input type="number" id="formNumericPrice" placeholder="185000" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                        <input type="number" id="formNumericPrice" min="0" placeholder="185000" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Badge Tag</label>
-                        <input type="text" id="formBadge" placeholder="Best Seller" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Badge Tag (optional)</label>
+                        <input type="text" id="formBadge" placeholder="e.g. Best Seller" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none">
                     </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Sale Price (LKR, optional)</label>
+                    <input type="number" id="formSalePrice" min="1" placeholder="Leave empty for no discount" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none">
+                    <span class="text-[11px] text-stone-500 block mt-1">Must be lower than the regular price. Customers will see the old price crossed out.</span>
                 </div>
                 <div>
                     <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Description</label>
@@ -446,15 +469,15 @@
                         <input type="text" id="formDimensions" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Warranty</label>
-                        <input type="text" id="formWarranty" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none" required>
+                        <label class="block text-xs font-bold text-stone-700 uppercase mb-1">Warranty (optional)</label>
+                        <input type="text" id="formWarranty" placeholder="e.g. 2 Years" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200 focus:outline-none">
                     </div>
                 </div>
-                
+
                 <!-- Multiple Images Section & Upload Progress -->
                 <div class="space-y-3 pt-1 border-t border-stone-200">
                     <label class="block text-xs font-bold text-stone-700 uppercase">Product Images (Multiple Options)</label>
-                    
+
                     <div>
                         <span class="text-[11px] text-stone-500 block mb-1">1. Multiple Image URLs (Comma Separated):</span>
                         <input type="text" id="formImageUrl" placeholder="https://image1.jpg, https://image2.jpg" class="w-full bg-stone-100 text-sm p-3 rounded-xl border border-stone-200">
@@ -463,17 +486,6 @@
                     <div>
                         <span class="text-[11px] text-stone-500 block mb-1">2. Upload Multiple Local Images:</span>
                         <input type="file" id="formImageFile" accept="image/*" multiple onchange="previewSelectedFiles(this)" class="w-full bg-stone-100 text-xs p-2 rounded-xl border border-stone-200">
-                    </div>
-
-                    <!-- Upload Progress Container -->
-                    <div id="uploadProgressContainer" class="hidden bg-stone-100 p-3 rounded-xl border border-stone-200 space-y-1.5">
-                        <div class="flex justify-between text-xs font-bold text-stone-700">
-                            <span id="uploadProgressText">Processing Images...</span>
-                            <span id="uploadProgressPercent">0%</span>
-                        </div>
-                        <div class="w-full bg-stone-200 h-2 rounded-full overflow-hidden">
-                            <div id="uploadProgressBar" class="bg-brand-600 h-full w-0 transition-all duration-150"></div>
-                        </div>
                     </div>
 
                     <!-- Selected Files Count / Preview Indicator -->
@@ -527,10 +539,10 @@
                         <div class="flex items-start gap-3"><i class="fa-solid fa-envelope text-brand-600 text-lg mt-0.5"></i><div><strong class="text-white block">Email</strong>emarkofurniture@gmail.com</div></div>
                     </div>
                 </div>
-                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" class="inline-flex items-center justify-center gap-2 bg-white text-stone-900 py-3.5 px-6 rounded-xl font-medium"><i class="fa-solid fa-map-location-dot text-brand-600"></i> Open in Google Maps</a>
+                <a href="https://maps.app.goo.gl/ezoeKo7gNZDtCiBF8" target="_blank" rel="noopener" onclick="trackContactClick('Location Map Section')" class="inline-flex items-center justify-center gap-2 bg-white text-stone-900 py-3.5 px-6 rounded-xl font-medium"><i class="fa-solid fa-map-location-dot text-brand-600"></i> Open in Google Maps</a>
             </div>
             <div class="min-h-[350px] bg-stone-800">
-                <iframe title="Map" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3960.898863640243!2d79.9048!3d6.8924!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae2598370000001%3A0x1!2sMahaniyara%20Junction%2C%20Sri%20Jayawardenepura%20Kotte!5e0!3m2!1sen!2slk!4v1700000000000" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="w-full h-full"></iframe>
+                <iframe title="Emarko showroom map" src="https://maps.google.com/maps?q=Mahaniyara+Junction,+Kotte,+Sri+Lanka&z=15&output=embed" referrerpolicy="no-referrer-when-downgrade" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" class="w-full h-full"></iframe>
             </div>
         </div>
     </section>
@@ -543,406 +555,463 @@
         </div>
     </footer>
 
-    <!-- App Logic Script with Supabase Integration -->
+    <!-- App Logic -->
     <script>
-        const db = supabaseClient;
+        // =====================================================================
+        // Config
+        // =====================================================================
+        const SUPABASE_URL = 'https://bbjkcnqzupncxmguzpwq.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJiamtjbnF6dXBuY3htZ3V6cHdxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5NDM1NzEsImV4cCI6MjEwNjUxOTU3MX0.k6jWGLOUnpO1hw_5ID-AWfn5N_F9fBoPuY71donnr8I';
+        const WA_NUMBER = '94773484343';
+        const SHOP_EMAIL = 'emarkofurniture@gmail.com';
+        const IMAGE_BUCKET = 'product-images';      // Supabase Storage bucket (public)
+        const OWNER_TRIGGER = 'owner login';          // typed in the search bar; NOT a secret, real login is required
+        const SLIDER_MAX = 505000;                    // slider's far-right value means "Unlimited"
+        const PAGE_SIZE = 15;
+        const FALLBACK_IMG = 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+        const OVERLAYS = ['productModal', 'lightboxModal', 'ownerDashboardModal', 'productEditorModal', 'loginModal'];
 
-        const defaultProducts = [
+        const DEFAULT_PRODUCTS = [
             { id: 1, name: "Royal Teak Living Room Sofa Set", category: "Living Room", subCategory: "Sofa Sets", priceNum: 185000, description: "Handcrafted from 100% seasoned genuine teak wood.", dimensions: "3-Seater: 78\"L x 32\"W x 34\"H", warranty: "5 Years Structural", images: ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"], badge: "Best Seller", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 5000 },
             { id: 2, name: "Modern Modular Kitchen Cabinet", category: "Kitchen", subCategory: "Kitchen Cabinets", priceNum: 210000, description: "Sleek kitchen storage cabinets built with moisture-resistant materials.", dimensions: "Custom Fit Setup", warranty: "3 Years Warranty", images: ["https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&q=80&w=800"], badge: "New Arrival", stockStatus: "In Stock", onSale: true, createdAt: Date.now() - 2000 },
             { id: 3, name: "Heavy-Duty Plastic Armchair", category: "Plastic", subCategory: "Chairs", priceNum: 6500, description: "Built with premium virgin polymer for maximum durability.", dimensions: "24\"W x 22\"D x 33\"H", warranty: "1 Year Warranty", images: ["https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&q=80&w=800"], badge: "Durable", stockStatus: "In Stock", onSale: false, createdAt: Date.now() - 1000 }
         ];
 
-        let furnitureProducts = [];
-        let clickAnalytics = JSON.parse(localStorage.getItem('emarko_clicks')) || { totalClicks: 0, items: {} };
-        let cart = JSON.parse(localStorage.getItem('emarko_cart')) || [];
-        let showAllCatalog = false;
-        let currentFilterCategory = 'all';
+        // =====================================================================
+        // Small helpers
+        // =====================================================================
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+        const safeImg = (u) => (/^(https?:|data:image\/)/i.test(u || '') ? u : FALLBACK_IMG);
+        const formatCurrency = (n) => 'LKR ' + Number(n || 0).toLocaleString();
+        const sameId = (a, b) => String(a) === String(b);
+        const readStore = (key, fallback) => { try { return JSON.parse(localStorage.getItem(key)) ?? fallback; } catch { return fallback; } };
+        const writeStore = (key, value) => { try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* storage full/blocked */ } };
 
-        // --- Fetch Products from Supabase ---
-        async function fetchProducts() {
+        // Supabase keys are JWTs. A damaged key never connects, so detect it and say so clearly.
+        const isValidAnonKey = (token) => {
             try {
-                const { data, error } = await db.from('products').select('*');
-                if (error) throw error;
-                if (data && data.length > 0) {
-                    furnitureProducts = data.map(item => ({
-                        id: item.id,
-                        name: item.name,
-                        category: item.category,
-                        subCategory: item.sub_category || item.subCategory || "General",
-                        priceNum: item.price_num || item.priceNum || 0,
-                        description: item.description || "",
-                        dimensions: item.dimensions || "Standard",
-                        warranty: item.warranty || "N/A",
-                        images: Array.isArray(item.images) ? item.images : (item.images ? [item.images] : []),
-                        badge: item.badge || "Featured",
-                        stockStatus: item.stock_status || item.stockStatus || "In Stock",
-                        onSale: item.on_sale || item.onSale || false,
-                        createdAt: new Date(item.created_at || item.createdAt || Date.now()).getTime()
-                    }));
-                } else {
-                    furnitureProducts = [...defaultProducts];
-                }
-            } catch (error) {
-                console.error('Error fetching products from Supabase, using fallback local cache/defaults:', error);
-                if (furnitureProducts.length === 0) furnitureProducts = [...defaultProducts];
+                const decode = (part) => JSON.parse(atob(part.replace(/-/g, '+').replace(/_/g, '/')));
+                const [header, payload] = token.split('.');
+                decode(header);
+                const data = decode(payload);
+                return data.role === 'anon' && /^[a-z0-9]{20}$/.test(data.ref || '');
+            } catch { return false; }
+        };
+        const keyOk = isValidAnonKey(SUPABASE_ANON_KEY);
+        if (!keyOk) console.error('Emarko: the Supabase anon key is invalid/corrupted. Copy it again from Supabase > Project Settings > API. Showing demo products only.');
+        const db = (window.supabase && keyOk) ? window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) : null;
+
+        // =====================================================================
+        // State
+        // =====================================================================
+        let products = [];
+        let usingFallback = false;
+        let cart = readStore('emarko_cart', []);
+        let clicks = readStore('emarko_clicks', { totalClicks: 0, items: {} });
+        if (!clicks.items) clicks.items = {};
+        let showAll = false;
+        let hasSaleColumn = true;   // set to false if the database has no sale_price_num column yet
+        let filterCategory = 'all';
+        let filterSub = 'all';
+
+        const findProduct = (id) => products.find((p) => sameId(p.id, id));
+        const firstImage = (p) => safeImg(p.images && p.images[0]);
+
+        // Sale pricing: the discount only applies while the product is marked "On Sale"
+        const unitPrice = (p) => (p.onSale && p.salePrice && p.salePrice < p.priceNum) ? p.salePrice : p.priceNum;
+        const isDiscounted = (p) => unitPrice(p) < p.priceNum;
+        const percentOff = (p) => Math.round((1 - unitPrice(p) / p.priceNum) * 100);
+        const priceHtml = (p) => isDiscounted(p)
+            ? `<span class="text-rose-700">${formatCurrency(unitPrice(p))}</span> <span class="text-sm text-stone-400 line-through font-medium ml-1">${formatCurrency(p.priceNum)}</span>`
+            : formatCurrency(p.priceNum);
+
+        // =====================================================================
+        // Overlays, scroll lock, toast
+        // =====================================================================
+        const isOpen = (id) => $(id).classList.contains('flex');
+        const syncScrollLock = () => {
+            const lock = OVERLAYS.some(isOpen) || !$('cartDrawer').classList.contains('translate-x-full');
+            document.body.style.overflow = lock ? 'hidden' : '';
+        };
+        const openOverlay = (id) => { $(id).classList.remove('hidden'); $(id).classList.add('flex'); syncScrollLock(); };
+        const closeOverlay = (id) => { $(id).classList.add('hidden'); $(id).classList.remove('flex'); syncScrollLock(); };
+
+        let toastTimer;
+        const showToast = (title, message, state = 'loading') => {
+            const toast = $('toastNotification');
+            const styles = {
+                loading: ['bg-brand-600', 'fa-solid fa-spinner animate-spin'],
+                done: ['bg-emerald-600', 'fa-solid fa-check'],
+                error: ['bg-rose-600', 'fa-solid fa-triangle-exclamation']
+            };
+            const [bg, icon] = styles[state];
+            $('toastTitle').textContent = title;
+            $('toastMessage').textContent = message;
+            $('toastIcon').className = `w-8 h-8 rounded-xl ${bg} flex items-center justify-center text-white shrink-0`;
+            $('toastIcon').innerHTML = `<i class="${icon}"></i>`;
+            toast.classList.remove('translate-y-20', 'opacity-0', 'pointer-events-none');
+            clearTimeout(toastTimer);
+            if (state !== 'loading') {
+                toastTimer = setTimeout(() => toast.classList.add('translate-y-20', 'opacity-0', 'pointer-events-none'), 3500);
             }
+        };
+
+        const toggleMobileMenu = () => $('mobileMenu').classList.toggle('hidden');
+
+        // =====================================================================
+        // Analytics (stored per visitor device only)
+        // =====================================================================
+        const trackContactClick = (source) => {
+            clicks.totalClicks = (clicks.totalClicks || 0) + 1;
+            clicks.items[source] = (clicks.items[source] || 0) + 1;
+            writeStore('emarko_clicks', clicks);
+            if (isOpen('ownerDashboardModal')) updateDashboardStats();
+        };
+
+        // =====================================================================
+        // Data loading (Supabase) + realtime
+        // =====================================================================
+        const fromRow = (r) => ({
+            id: r.id,
+            name: r.name || 'Untitled',
+            category: r.category || 'Other',
+            subCategory: r.sub_category || r.subCategory || 'General',
+            priceNum: Number(r.price_num ?? r.priceNum ?? 0),
+            salePrice: Number(r.sale_price_num ?? r.salePrice) > 0 ? Number(r.sale_price_num ?? r.salePrice) : null,
+            description: r.description || '',
+            dimensions: r.dimensions || 'Standard',
+            warranty: r.warranty || '',
+            images: Array.isArray(r.images) ? r.images : (r.images ? [r.images] : []),
+            badge: r.badge || '',
+            stockStatus: r.stock_status || r.stockStatus || 'In Stock',
+            onSale: Boolean(r.on_sale ?? r.onSale ?? false),
+            createdAt: new Date(r.created_at || r.createdAt || Date.now()).getTime()
+        });
+
+        async function fetchProducts() {
+            if (!db) {
+                products = DEFAULT_PRODUCTS.map(fromRow);
+                usingFallback = true;
+            } else {
+                const { data, error } = await db.from('products').select('*');
+                if (error) {
+                    console.error('Error fetching products:', error);
+                    if (!products.length) { products = DEFAULT_PRODUCTS.map(fromRow); usingFallback = true; }
+                } else {
+                    if (data.length) hasSaleColumn = 'sale_price_num' in data[0];
+                    products = data.map(fromRow);
+                    usingFallback = false;
+                }
+            }
+            syncCartWithCatalog();
             handleAdvancedFilters();
-            updateCartBadge();
+            if (isOpen('ownerDashboardModal')) { updateDashboardStats(); filterDashboardInventory(); }
         }
 
-        const persistData = () => {
-            localStorage.setItem('emarko_clicks', JSON.stringify(clickAnalytics));
-            localStorage.setItem('emarko_cart', JSON.stringify(cart));
-            updateCartBadge();
+        let realtimeTimer;
+        const setupRealtime = () => {
+            if (!db) return;
+            db.channel('public:products')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'products' }, () => {
+                    clearTimeout(realtimeTimer);
+                    realtimeTimer = setTimeout(fetchProducts, 400);   // debounce bursts of changes
+                })
+                .subscribe();
         };
 
-        const formatCurrency = (num) => 'LKR ' + (num || 0).toLocaleString();
+        // =====================================================================
+        // Cart / quote
+        // =====================================================================
+        const saveCart = () => { writeStore('emarko_cart', cart); updateCartBadge(); };
 
-        const trackContactClick = (source) => {
-            clickAnalytics.totalClicks = (clickAnalytics.totalClicks || 0) + 1;
-            clickAnalytics.items[source] = (clickAnalytics.items[source] || 0) + 1;
-            persistData();
+        // Keep cart prices/names current and drop products that no longer exist
+        const syncCartWithCatalog = () => {
+            if (usingFallback || !cart.length) { updateCartBadge(); return; }
+            cart = cart.flatMap((item) => {
+                const p = findProduct(item.id);
+                return p ? [{ ...item, name: p.name, priceNum: unitPrice(p), image: firstImage(p) }] : [];
+            });
+            saveCart();
+            if ($('cartDrawer') && !$('cartDrawer').classList.contains('translate-x-full')) renderCart();
         };
 
-        // --- Toast / Notification Popup ---
-        const showToast = (title, message, isDone = false) => {
-            const toast = document.getElementById('toastNotification');
-            const toastTitle = document.getElementById('toastTitle');
-            const toastMessage = document.getElementById('toastMessage');
-            const toastIcon = document.getElementById('toastIcon');
-
-            toastTitle.textContent = title;
-            toastMessage.textContent = message;
-
-            if (isDone) {
-                toastIcon.className = "w-8 h-8 rounded-xl bg-emerald-600 flex items-center justify-center text-white shrink-0";
-                toastIcon.innerHTML = `<i class="fa-solid fa-check"></i>`;
-            } else {
-                toastIcon.className = "w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white shrink-0";
-                toastIcon.innerHTML = `<i class="fa-solid fa-spinner animate-spin"></i>`;
-            }
-
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-
-            if (isDone) {
-                setTimeout(() => {
-                    toast.classList.remove('translate-y-0', 'opacity-100');
-                    toast.classList.add('translate-y-20', 'opacity-0');
-                }, 3000);
-            }
-        };
-
-        // --- Cart & Bulk Quote Functions ---
         const toggleCartDrawer = () => {
-            const drawer = document.getElementById('cartDrawer');
-            const backdrop = document.getElementById('cartDrawerBackdrop');
-            const isOpen = drawer.classList.contains('translate-x-full');
-            if (isOpen) {
-                drawer.classList.remove('translate-x-full');
-                backdrop.classList.remove('hidden');
-                renderCartDrawerItems();
-                document.body.style.overflow = 'hidden';
-            } else {
-                drawer.classList.add('translate-x-full');
-                backdrop.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
+            const drawer = $('cartDrawer');
+            const opening = drawer.classList.contains('translate-x-full');
+            drawer.classList.toggle('translate-x-full', !opening);
+            $('cartDrawerBackdrop').classList.toggle('hidden', !opening);
+            if (opening) renderCart();
+            syncScrollLock();
         };
 
         const addToCart = (id) => {
-            const p = furnitureProducts.find(item => item.id === id);
-            if (!p || p.stockStatus === "Out of Stock") return;
-            const existing = cart.find(item => item.id === id);
-            if (existing) {
-                existing.qty += 1;
-            } else {
-                const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
-                cart.push({ id: p.id, name: p.name, priceNum: p.priceNum, image: img, qty: 1, finish: 'Standard Polish' });
-            }
-            persistData();
-            toggleCartDrawer();
+            const p = findProduct(id);
+            if (!p || p.stockStatus === 'Out of Stock') return;
+            const existing = cart.find((i) => sameId(i.id, id));
+            if (existing) existing.qty += 1;
+            else cart.push({ id: p.id, name: p.name, priceNum: unitPrice(p), image: firstImage(p), qty: 1 });
+            saveCart();
+            if ($('cartDrawer').classList.contains('translate-x-full')) toggleCartDrawer(); else renderCart();
         };
 
         const updateCartQty = (id, change) => {
-            const item = cart.find(i => i.id === id);
+            const item = cart.find((i) => sameId(i.id, id));
             if (!item) return;
             item.qty += change;
-            if (item.qty <= 0) {
-                cart = cart.filter(i => i.id !== id);
-            }
-            persistData();
-            renderCartDrawerItems();
+            if (item.qty <= 0) cart = cart.filter((i) => !sameId(i.id, id));
+            saveCart();
+            renderCart();
         };
 
-        const updateCartFinish = (id, finishVal) => {
-            const item = cart.find(i => i.id === id);
-            if (item) { item.finish = finishVal; persistData(); }
-        };
-
-        const renderCartDrawerItems = () => {
-            const container = document.getElementById('cartItemsContainer');
-            const totalEl = document.getElementById('cartTotalPrice');
-            if (cart.length === 0) {
-                container.innerHTML = `<div class="text-center py-12 text-stone-400 text-sm">Your inquiry cart is empty. Browse items and add them for a bulk quote!</div>`;
-                totalEl.textContent = 'LKR 0';
+        const renderCart = () => {
+            const container = $('cartItemsContainer');
+            if (!cart.length) {
+                container.innerHTML = '<div class="text-center py-12 text-stone-400 text-sm">Your inquiry cart is empty. Browse items and add them for a bulk quote!</div>';
+                $('cartTotalPrice').textContent = 'LKR 0';
                 return;
             }
-
-            let totalSum = 0;
-            container.innerHTML = cart.map(item => {
-                const itemTotal = item.priceNum * item.qty;
-                totalSum += itemTotal;
+            let total = 0;
+            container.innerHTML = cart.map((item) => {
+                const lineTotal = item.priceNum * item.qty;
+                total += lineTotal;
+                const id = esc(item.id);
                 return `
                     <div class="pt-4 first:pt-0 flex gap-4 items-start">
-                        <img src="${item.image}" class="w-16 h-16 rounded-xl object-cover border shrink-0">
+                        <img src="${esc(safeImg(item.image))}" alt="" onerror="this.onerror=null;this.src=FALLBACK_IMG" class="w-16 h-16 rounded-xl object-cover border shrink-0">
                         <div class="flex-1">
-                            <h4 class="font-serif font-bold text-stone-900 text-sm">${item.name}</h4>
-                            <div class="text-xs text-brand-700 font-bold mb-1">${formatCurrency(item.priceNum)} each</div>
-                            <div class="flex items-center gap-2 mb-2">
-                                <label class="text-[10px] text-stone-500 uppercase font-semibold">Finish:</label>
-                                <select onchange="updateCartFinish(${item.id}, this.value)" class="text-xs bg-stone-100 border border-stone-200 rounded px-2 py-1 focus:outline-none">
-                                    <option value="Standard Polish" ${item.finish === 'Standard Polish' ? 'selected' : ''}>Standard Polish</option>
-                                    <option value="Matte Walnut" ${item.finish === 'Matte Walnut' ? 'selected' : ''}>Matte Walnut</option>
-                                    <option value="Gloss Teak" ${item.finish === 'Gloss Teak' ? 'selected' : ''}>Gloss Teak</option>
-                                    <option value="Dark Mahogany" ${item.finish === 'Dark Mahogany' ? 'selected' : ''}>Dark Mahogany</option>
-                                </select>
-                            </div>
+                            <h4 class="font-serif font-bold text-stone-900 text-sm">${esc(item.name)}</h4>
+                            <div class="text-xs text-brand-700 font-bold mb-2">${formatCurrency(item.priceNum)} each</div>
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-2 border border-stone-200 rounded-lg px-2 py-1 bg-stone-50">
-                                    <button onclick="updateCartQty(${item.id}, -1)" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-minus text-[10px]"></i></button>
+                                    <button onclick="updateCartQty('${id}', -1)" aria-label="Decrease quantity" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-minus text-[10px]"></i></button>
                                     <span class="text-xs font-bold w-4 text-center">${item.qty}</span>
-                                    <button onclick="updateCartQty(${item.id}, 1)" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-plus text-[10px]"></i></button>
+                                    <button onclick="updateCartQty('${id}', 1)" aria-label="Increase quantity" class="text-stone-500 hover:text-black px-1"><i class="fa-solid fa-plus text-[10px]"></i></button>
                                 </div>
-                                <span class="text-xs font-bold text-stone-900">${formatCurrency(itemTotal)}</span>
+                                <span class="text-xs font-bold text-stone-900">${formatCurrency(lineTotal)}</span>
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
-            totalEl.textContent = formatCurrency(totalSum);
+            $('cartTotalPrice').textContent = formatCurrency(total);
         };
 
         const updateCartBadge = () => {
-            const count = cart.reduce((acc, item) => acc + item.qty, 0);
-            document.getElementById('cartBadgeCount').textContent = count;
-            document.getElementById('mobileCartBadgeCount').textContent = count;
+            const count = cart.reduce((sum, i) => sum + i.qty, 0);
+            $('cartBadgeCount').textContent = count;
+            $('mobileCartBadgeCount').textContent = count;
+        };
+
+        const buildQuote = (bold) => {
+            let total = 0;
+            const lines = cart.map((i, n) => {
+                const line = i.priceNum * i.qty;
+                total += line;
+                const name = bold ? `*${i.name}*` : i.name;
+                return `${n + 1}. ${name} (Qty: ${i.qty}) - ${formatCurrency(line)}`;
+            });
+            return { lines: lines.join('\n'), total };
         };
 
         const submitCartWhatsApp = () => {
-            if (cart.length === 0) return;
+            if (!cart.length) return;
             trackContactClick('Bulk Cart WhatsApp');
-            let msg = "Hello Emarko Furniture, I would like to request a quote for the following items:\n\n";
-            let total = 0;
-            cart.forEach((i, idx) => {
-                msg += `${idx + 1}. *${i.name}* (Qty: ${i.qty}) - Finish: ${i.finish} - ${formatCurrency(i.priceNum * i.qty)}\n`;
-                total += i.priceNum * i.qty;
-            });
-            msg += `\n*Estimated Total:* ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
-            window.open(`https://wa.me/94773484343?text=${encodeURIComponent(msg)}`, '_blank');
+            const { lines, total } = buildQuote(true);
+            const msg = `Hello Emarko Furniture, I would like to request a quote for the following items:\n\n${lines}\n\n*Estimated Total:* ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
+            window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
         };
 
         const submitCartEmail = () => {
-            if (cart.length === 0) return;
+            if (!cart.length) return;
             trackContactClick('Bulk Cart Email');
-            let subject = "Bulk Furniture Inquiry / Quote Request - Emarko";
-            let body = "Hello Emarko Furniture,\n\nI would like to request a quote for the following items:\n\n";
-            let total = 0;
-            cart.forEach((i, idx) => {
-                body += `${idx + 1}. ${i.name} (Qty: ${i.qty}) - Finish: ${i.finish} - ${formatCurrency(i.priceNum * i.qty)}\n`;
-                total += i.priceNum * i.qty;
-            });
-            body += `\nEstimated Total: ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
-            window.location.href = `mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const { lines, total } = buildQuote(false);
+            const body = `Hello Emarko Furniture,\n\nI would like to request a quote for the following items:\n\n${lines}\n\nEstimated Total: ${formatCurrency(total)}\n\nPlease let me know availability and delivery details. Thank you!`;
+            window.location.href = `mailto:${SHOP_EMAIL}?subject=${encodeURIComponent('Bulk Furniture Inquiry / Quote Request - Emarko')}&body=${encodeURIComponent(body)}`;
         };
 
-        // --- Filtering / Sorting / Rendering ---
+        // =====================================================================
+        // Filtering, sorting, search, product grid
+        // =====================================================================
         const handleSliderInput = (val) => {
-            const valNum = parseInt(val);
-            const inputEl = document.getElementById('customMaxPriceInput');
-            if (valNum >= 505000) {
-                inputEl.value = '';
-            } else {
-                inputEl.value = valNum;
-            }
+            const n = parseInt(val, 10);
+            $('customMaxPriceInput').value = n >= SLIDER_MAX ? '' : n;
             handleAdvancedFilters();
         };
 
         const handleCustomPriceInput = (val) => {
-            const sliderEl = document.getElementById('priceRangeSlider');
-            if (val.length > 8) {
-                val = val.slice(0, 8);
-                document.getElementById('customMaxPriceInput').value = val;
-            }
-            if (!val || parseInt(val) <= 0) {
-                sliderEl.value = 505000;
-            } else {
-                const num = parseInt(val);
-                if (num >= 505000) {
-                    sliderEl.value = 505000;
-                } else {
-                    sliderEl.value = Math.max(5000, num);
-                }
-            }
+            const input = $('customMaxPriceInput');
+            if (val.length > 8) input.value = val = val.slice(0, 8);
+            const n = parseInt(val, 10);
+            $('priceRangeSlider').value = (isNaN(n) || n <= 0 || n >= SLIDER_MAX) ? SLIDER_MAX : Math.max(5000, n);
             handleAdvancedFilters();
         };
 
-        const handleAdvancedFilters = () => {
-            const customVal = document.getElementById('customMaxPriceInput').value.trim();
-            const sliderVal = parseInt(document.getElementById('priceRangeSlider').value);
-            let maxPrice = Infinity;
-
-            if (customVal !== '' && parseInt(customVal) > 0) {
-                maxPrice = parseInt(customVal);
-                document.getElementById('priceRangeLabel').textContent = formatCurrency(maxPrice);
-            } else if (sliderVal < 505000) {
-                maxPrice = sliderVal;
-                document.getElementById('priceRangeLabel').textContent = formatCurrency(maxPrice);
-            } else {
-                maxPrice = Infinity;
-                document.getElementById('priceRangeLabel').textContent = 'Unlimited';
-            }
-
-            const inStockOnly = document.getElementById('inStockOnlyCheckbox').checked;
-            const sortBy = document.getElementById('sortDropdown').value;
-
-            let filtered = furnitureProducts.filter(p => {
-                const matchCat = currentFilterCategory === 'all' || p.category.toLowerCase() === currentFilterCategory.toLowerCase();
-                const matchPrice = maxPrice === Infinity || p.priceNum <= maxPrice;
-                const matchStock = !inStockOnly || p.stockStatus === "In Stock";
-                return matchCat && matchPrice && matchStock;
-            });
-
-            if (sortBy === 'priceLowHigh') filtered.sort((a, b) => a.priceNum - b.priceNum);
-            else if (sortBy === 'priceHighLow') filtered.sort((a, b) => b.priceNum - a.priceNum);
-            else if (sortBy === 'newest') filtered.sort((a, b) => b.createdAt - a.createdAt);
-
-            renderProductsList(filtered, currentFilterCategory === 'all' ? "Featured Furniture Catalog" : `${currentFilterCategory} Collection`, currentFilterCategory === 'all');
+        const getMaxPrice = () => {
+            const custom = parseInt($('customMaxPriceInput').value, 10);
+            if (custom > 0) return custom;
+            const slider = parseInt($('priceRangeSlider').value, 10);
+            return slider < SLIDER_MAX ? slider : Infinity;
         };
 
-        const renderProductsList = (items, title, isAllTab) => {
-            const grid = document.getElementById('productGrid');
-            document.getElementById('catalogTitle').textContent = title;
-            const seeMore = document.getElementById('seeMoreContainer');
+        const handleAdvancedFilters = () => {
+            const maxPrice = getMaxPrice();
+            $('priceRangeLabel').textContent = maxPrice === Infinity ? 'Unlimited' : formatCurrency(maxPrice);
+            const inStockOnly = $('inStockOnlyCheckbox').checked;
+            const sortBy = $('sortDropdown').value;
+            const cat = filterCategory.toLowerCase();
+            const sub = filterSub.toLowerCase();
 
-            let displayed = items;
-            if (isAllTab && !showAllCatalog && items.length > 15) {
-                displayed = items.slice(0, 15);
-                seeMore.classList.remove('hidden');
-            } else {
-                seeMore.classList.add('hidden');
-            }
+            const filtered = products.filter((p) =>
+                (cat === 'all' || p.category.toLowerCase() === cat) &&
+                (sub === 'all' || p.subCategory.toLowerCase() === sub) &&
+                unitPrice(p) <= maxPrice &&
+                (!inStockOnly || p.stockStatus === 'In Stock'));
 
-            if (displayed.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-16 text-stone-500">No items found matching your filters.</div>`;
+            if (sortBy === 'priceLowHigh') filtered.sort((a, b) => unitPrice(a) - unitPrice(b));
+            else if (sortBy === 'priceHighLow') filtered.sort((a, b) => unitPrice(b) - unitPrice(a));
+            else if (sortBy === 'newest') filtered.sort((a, b) => b.createdAt - a.createdAt);
+
+            let title = 'Featured Furniture Catalog';
+            if (cat !== 'all') title = sub !== 'all' ? `${filterCategory} - ${filterSub}` : `${filterCategory} Collection`;
+            renderProducts(filtered, title, cat === 'all' && sub === 'all');
+        };
+
+        const renderProducts = (items, title, paginate) => {
+            $('catalogTitle').textContent = title;
+            const grid = $('productGrid');
+            const seeMore = $('seeMoreContainer');
+            const limited = paginate && !showAll && items.length > PAGE_SIZE;
+            const shown = limited ? items.slice(0, PAGE_SIZE) : items;
+            seeMore.classList.toggle('hidden', !limited);
+
+            if (!shown.length) {
+                grid.innerHTML = '<div class="col-span-full text-center py-16 text-stone-500">No items found matching your filters.</div>';
                 return;
             }
-
-            grid.innerHTML = displayed.map(p => {
-                const isOut = p.stockStatus === "Out of Stock";
-                const displayImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
-                const imageCountBadge = (p.images && p.images.length > 1) ? `<span class="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-images"></i> ${p.images.length}</span>` : '';
-
+            grid.innerHTML = shown.map((p) => {
+                const isOut = p.stockStatus === 'Out of Stock';
+                const id = esc(p.id);
+                const imageCount = p.images.length > 1
+                    ? `<span class="bg-black/60 backdrop-blur-md text-white text-[10px] px-2 py-0.5 rounded-md flex items-center gap-1"><i class="fa-solid fa-images"></i> ${p.images.length}</span>` : '';
                 return `
                     <div class="bg-white rounded-2xl overflow-hidden border border-stone-200 shadow-sm hover:shadow-xl transition flex flex-col group relative ${isOut ? 'opacity-90' : ''}">
-                        <div class="relative h-64 overflow-hidden bg-stone-100 cursor-pointer" onclick="openProductModal(${p.id})">
-                            <img src="${displayImg}" alt="${p.name}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                        <div class="relative h-64 overflow-hidden bg-stone-100 cursor-pointer" onclick="openProductModal('${id}')">
+                            <img src="${esc(firstImage(p))}" alt="${esc(p.name)}" loading="lazy" onerror="this.onerror=null;this.src=FALLBACK_IMG" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
                             <div class="absolute top-3 left-3 flex flex-wrap gap-1.5 items-center">
-                                <span class="bg-stone-900/80 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full">${p.badge}</span>
-                                ${p.onSale ? '<span class="bg-amber-600 text-white text-xs px-3 py-1 rounded-full font-bold">Sale</span>' : ''}
+                                ${p.badge ? `<span class="bg-stone-900/80 backdrop-blur-md text-white text-xs px-3 py-1 rounded-full">${esc(p.badge)}</span>` : ''}
+                                ${p.onSale ? `<span class="bg-amber-600 text-white text-xs px-3 py-1 rounded-full font-bold">${isDiscounted(p) ? `-${percentOff(p)}%` : 'Sale'}</span>` : ''}
                                 ${isOut ? '<span class="bg-rose-600 text-white text-xs px-3 py-1 rounded-full font-bold">Out of Stock</span>' : ''}
-                                ${imageCountBadge}
+                                ${imageCount}
                             </div>
-                            <div class="absolute top-3 right-3"><span class="bg-brand-600 text-white text-xs px-3 py-1 rounded-semibold">${p.category}</span></div>
+                            <div class="absolute top-3 right-3"><span class="bg-brand-600 text-white text-xs px-3 py-1 rounded-full font-semibold">${esc(p.category)}</span></div>
                         </div>
                         <div class="p-6 flex-1 flex flex-col justify-between">
-                            <div class="cursor-pointer" onclick="openProductModal(${p.id})">
-                                <span class="text-xs text-brand-600 font-bold uppercase tracking-wider block mb-1">${p.subCategory}</span>
-                                <h3 class="font-serif text-xl font-bold text-stone-900 mb-2 group-hover:text-brand-700 transition">${p.name}</h3>
-                                <div class="text-brand-800 font-bold text-lg mb-4">${formatCurrency(p.priceNum)}</div>
+                            <div class="cursor-pointer" onclick="openProductModal('${id}')">
+                                <span class="text-xs text-brand-600 font-bold uppercase tracking-wider block mb-1">${esc(p.subCategory)}</span>
+                                <h3 class="font-serif text-xl font-bold text-stone-900 mb-2 group-hover:text-brand-700 transition">${esc(p.name)}</h3>
+                                <div class="text-brand-800 font-bold text-lg mb-4">${priceHtml(p)}</div>
                             </div>
                             <div class="flex items-center gap-2 pt-3 border-t border-stone-100">
-                                <button onclick="openProductModal(${p.id})" class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-bold transition">View Details</button>
-                                ${isOut ? '<button disabled class="bg-stone-200 text-stone-400 px-4 py-2.5 rounded-xl text-xs font-bold cursor-not-allowed">Out of Stock</button>' : '<button onclick="addToCart(' + p.id + ')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"><i class="fa-solid fa-bag-shopping"></i> Add to Quote</button>'}
+                                <button onclick="openProductModal('${id}')" class="flex-1 bg-stone-100 hover:bg-stone-200 text-stone-800 py-2.5 rounded-xl text-xs font-bold transition">View Details</button>
+                                ${isOut
+                                    ? '<button disabled class="bg-stone-200 text-stone-400 px-4 py-2.5 rounded-xl text-xs font-bold cursor-not-allowed">Out of Stock</button>'
+                                    : `<button onclick="addToCart('${id}')" class="bg-brand-600 hover:bg-brand-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5"><i class="fa-solid fa-bag-shopping"></i> Add to Quote</button>`}
                             </div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
             }).join('');
         };
 
-        const showAllItems = () => { showAllCatalog = true; handleAdvancedFilters(); };
+        const showAllItems = () => { showAll = true; handleAdvancedFilters(); };
 
         const handleLiveSearch = (query, scroll = false) => {
             const keyword = query.trim();
-            if (keyword === "Owner1234") {
-                document.getElementById('headerSearchInput').value = "";
-                document.getElementById('mobileSearchInput').value = "";
-                openOwnerDashboard();
+            if (keyword.toLowerCase() === OWNER_TRIGGER) {
+                $('headerSearchInput').value = '';
+                $('mobileSearchInput').value = '';
+                openOwnerAccess();
                 return;
             }
-
-            const lowerKeyword = keyword.toLowerCase();
-            if (!lowerKeyword) { showAllCatalog = false; handleAdvancedFilters(); return; }
-            const res = furnitureProducts.filter(p => p.name.toLowerCase().includes(lowerKeyword) || p.category.toLowerCase().includes(lowerKeyword) || p.description.toLowerCase().includes(lowerKeyword));
-            renderProductsList(res, `Search Results for "${query}"`, false);
-            if (scroll) document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
+            if (!keyword) { showAll = false; handleAdvancedFilters(); return; }
+            const q = keyword.toLowerCase();
+            const results = products.filter((p) => [p.name, p.category, p.subCategory, p.description].some((f) => f.toLowerCase().includes(q)));
+            renderProducts(results, `Search Results for "${keyword}"`, false);
+            if (scroll) $('collection').scrollIntoView({ behavior: 'smooth' });
         };
 
-        const handleSearchKeydown = (e, q) => { if (e.key === 'Enter') { e.preventDefault(); handleLiveSearch(q, true); e.target.blur(); } };
+        const handleSearchKeydown = (e, q) => {
+            if (e.key === 'Enter') { e.preventDefault(); handleLiveSearch(q, true); e.target.blur(); }
+        };
 
-        // --- Product Modal & Lightbox Zoom ---
+        // One function drives both category buttons and sub-category links
+        const setFilter = (category, sub = 'all') => {
+            filterCategory = category;
+            filterSub = sub;
+            document.querySelectorAll('.filter-btn').forEach((btn) => {
+                const on = btn.dataset.cat.toLowerCase() === category.toLowerCase();
+                btn.classList.toggle('bg-white', on);
+                btn.classList.toggle('text-stone-900', on);
+                btn.classList.toggle('shadow-sm', on);
+                btn.classList.toggle('text-stone-600', !on);
+            });
+            handleAdvancedFilters();
+        };
+        const filterProducts = (category) => setFilter(category);
+        const filterBySubCategory = (category, sub) => setFilter(category, sub);
+
+        // =====================================================================
+        // Product modal + lightbox
+        // =====================================================================
         const openProductModal = (id) => {
-            const p = furnitureProducts.find(item => item.id === id);
+            const p = findProduct(id);
             if (!p) return;
-            document.getElementById('modalCategory').textContent = `${p.category} / ${p.subCategory}`;
-            document.getElementById('modalTitle').textContent = p.name;
-            document.getElementById('modalPrice').textContent = formatCurrency(p.priceNum);
-            document.getElementById('modalDescription').textContent = p.description;
-            document.getElementById('modalDimensions').textContent = p.dimensions;
-            document.getElementById('modalWarranty').textContent = p.warranty;
-            document.getElementById('modalBadge').textContent = p.badge;
+            $('modalCategory').textContent = `${p.category} / ${p.subCategory}`;
+            $('modalTitle').textContent = p.name;
+            $('modalPrice').innerHTML = priceHtml(p);
+            $('modalDescription').textContent = p.description;
+            $('modalDimensions').textContent = p.dimensions;
+            $('modalWarranty').textContent = p.warranty;
+            $('modalWarrantyRow').classList.toggle('hidden', !p.warranty);
+            $('modalBadge').textContent = p.badge;
+            $('modalBadge').classList.toggle('hidden', !p.badge);
 
-            const isOut = p.stockStatus === "Out of Stock";
-            const stockBadge = document.getElementById('modalStockBadge');
-            const actionContainer = document.getElementById('modalActionContainer');
+            const isOut = p.stockStatus === 'Out of Stock';
+            const stockBadge = $('modalStockBadge');
+            const name = esc(p.name);
+            const wa = (text) => `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(text)}`;
 
             if (isOut) {
-                stockBadge.textContent = "Out of Stock";
-                stockBadge.className = "bg-rose-600 text-white text-xs px-3 py-1 rounded-full font-bold block";
-                actionContainer.innerHTML = `<div class="bg-rose-50 text-rose-700 p-3 rounded-xl text-center text-xs font-semibold">Currently out of stock.</div>
+                stockBadge.textContent = 'Out of Stock';
+                stockBadge.className = 'bg-rose-600 text-white text-xs px-3 py-1 rounded-full font-bold block';
+                $('modalActionContainer').innerHTML = `
+                    <div class="bg-rose-50 text-rose-700 p-3 rounded-xl text-center text-xs font-semibold">Currently out of stock.</div>
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="https://wa.me/94773484343?text=${encodeURIComponent(`Hi, is "${p.name}" resting soon?`)}" onclick="trackContactClick('${p.name} (Restock WhatsApp)')" target="_blank" class="bg-stone-800 hover:bg-stone-900 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp</a>
-                        <a href="mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(`Restock Inquiry: ${p.name}`)}" onclick="trackContactClick('${p.name} (Restock Email)')" class="bg-stone-700 hover:bg-stone-800 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-sm"></i> Email</a>
+                        <a href="${wa(`Hi, is "${p.name}" restocking soon?`)}" data-src="${name} (Restock WhatsApp)" onclick="trackContactClick(this.dataset.src)" target="_blank" rel="noopener" rel="noopener" class="bg-stone-800 hover:bg-stone-900 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-sm"></i> WhatsApp</a>
+                        <a href="mailto:${SHOP_EMAIL}?subject=${encodeURIComponent(`Restock Inquiry: ${p.name}`)}" data-src="${name} (Restock Email)" onclick="trackContactClick(this.dataset.src)" class="bg-stone-700 hover:bg-stone-800 text-white py-3 px-3 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-sm"></i> Email</a>
                     </div>`;
             } else {
-                stockBadge.className = "hidden";
-                actionContainer.innerHTML = `
-                    <button onclick="closeProductModal(); addToCart(${p.id});" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 px-6 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2"><i class="fa-solid fa-bag-shopping"></i> Add to Inquiry Cart</button>
+                stockBadge.className = 'hidden';
+                const mailBody = `Hello Emarko Furniture,\n\nI am interested in purchasing/inquiring about:\nItem: ${p.name}\nPrice: ${formatCurrency(unitPrice(p))}${isDiscounted(p) ? ` (sale price, regular ${formatCurrency(p.priceNum)})` : ''}\n\nPlease contact me with more details.`;
+                $('modalActionContainer').innerHTML = `
+                    <button data-id="${esc(p.id)}" onclick="closeProductModal(); addToCart(this.dataset.id);" class="w-full bg-brand-600 hover:bg-brand-700 text-white py-3.5 px-6 rounded-xl font-bold text-sm shadow-lg flex items-center justify-center gap-2"><i class="fa-solid fa-bag-shopping"></i> Add to Inquiry Cart</button>
                     <div class="grid grid-cols-2 gap-2">
-                        <a href="https://wa.me/94773484343?text=${encodeURIComponent(`Hi, I'm interested in "${p.name}" (${formatCurrency(p.priceNum)}).`)}" onclick="trackContactClick('${p.name} (WhatsApp)')" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry</a>
-                        <a href="mailto:emarkofurniture@gmail.com?subject=${encodeURIComponent(`Inquiry for ${p.name}`)}&body=${encodeURIComponent(`Hello Emarko Furniture,\n\nI am interested in purchasing/inquiring about:\nItem: ${p.name}\nPrice:${formatCurrency(p.priceNum)}\n\nPlease contact me with more details.`)}" onclick="trackContactClick('${p.name} (Email)')" class="bg-rose-600 hover:bg-rose-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-base"></i> Email Inquiry</a>
+                        <a href="${wa(`Hi, I'm interested in "${p.name}" (${formatCurrency(unitPrice(p))}).`)}" data-src="${name} (WhatsApp)" onclick="trackContactClick(this.dataset.src)" target="_blank" rel="noopener" rel="noopener" class="bg-emerald-600 hover:bg-emerald-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-brands fa-whatsapp text-base"></i> WhatsApp Inquiry</a>
+                        <a href="mailto:${SHOP_EMAIL}?subject=${encodeURIComponent(`Inquiry for ${p.name}`)}&body=${encodeURIComponent(mailBody)}" data-src="${name} (Email)" onclick="trackContactClick(this.dataset.src)" class="bg-rose-600 hover:bg-rose-700 text-white py-3 px-3 rounded-xl font-bold text-xs shadow flex items-center justify-center gap-1.5"><i class="fa-solid fa-envelope text-base"></i> Email Inquiry</a>
                     </div>`;
             }
 
-            const galleryImgs = (p.images && p.images.length > 0) ? p.images : ["https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800"];
-
-            document.getElementById('modalMainImage').src = galleryImgs[0];
-            document.getElementById('modalThumbnails').innerHTML = galleryImgs.map((img, i) => `
-                <button onclick="changeModalMainImage('${img}', this)" class="modal-thumb-btn w-16 h-16 rounded-xl overflow-hidden border-2 shrink-0 ${i === 0 ? 'border-brand-600' : 'border-transparent'}">
-                    <img src="${img}" class="w-full h-full object-cover">
-                </button>
-            `).join('');
-            
-            const modal = document.getElementById('productModal');
-            modal.classList.remove('hidden'); modal.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            const gallery = p.images.length ? p.images.map(safeImg) : [FALLBACK_IMG];
+            $('modalMainImage').src = gallery[0];
+            $('modalThumbnails').innerHTML = gallery.map((img, i) => `
+                <button data-src="${esc(img)}" onclick="changeModalMainImage(this.dataset.src, this)" class="modal-thumb-btn w-16 h-16 rounded-xl overflow-hidden border-2 shrink-0 ${i === 0 ? 'border-brand-600' : 'border-transparent'}">
+                    <img src="${esc(img)}" alt="" class="w-full h-full object-cover">
+                </button>`).join('');
+            openOverlay('productModal');
         };
 
-        const changeModalMainImage = (imgSrc, btn) => {
-            document.getElementById('modalMainImage').src = imgSrc;
-            document.querySelectorAll('.modal-thumb-btn').forEach(b => {
+        const changeModalMainImage = (src, btn) => {
+            $('modalMainImage').src = src;
+            document.querySelectorAll('.modal-thumb-btn').forEach((b) => {
                 b.classList.remove('border-brand-600');
                 b.classList.add('border-transparent');
             });
@@ -950,342 +1019,323 @@
             btn.classList.add('border-brand-600');
         };
 
-        const closeProductModal = () => { document.getElementById('productModal').classList.add('hidden'); document.getElementById('productModal').classList.remove('flex'); document.body.style.overflow = 'auto'; };
+        const closeProductModal = () => closeOverlay('productModal');
+        const openLightbox = (src) => { $('lightboxImg').src = src; openOverlay('lightboxModal'); };
+        const closeLightbox = () => closeOverlay('lightboxModal');
 
-        const openLightbox = (imgSrc) => {
-            document.getElementById('lightboxImg').src = imgSrc;
-            const lb = document.getElementById('lightboxModal');
-            lb.classList.remove('hidden'); lb.classList.add('flex');
-        };
-        const closeLightbox = () => {
-            const lb = document.getElementById('lightboxModal');
-            lb.classList.add('hidden'); lb.classList.remove('flex');
+        // =====================================================================
+        // Owner access (Supabase Auth)
+        // =====================================================================
+        const getSession = async () => {
+            if (!db) return null;
+            const { data } = await db.auth.getSession();
+            return data.session;
         };
 
-        // --- Owner Dashboard & CSV Export ---
+        const openOwnerAccess = async () => {
+            if (!db) { showToast('Database offline', 'Owner tools need a working Supabase connection.', 'error'); return; }
+            if (await getSession()) openOwnerDashboard();
+            else { $('loginError').classList.add('hidden'); openOverlay('loginModal'); $('loginEmail').focus(); }
+        };
+
+        const closeLoginModal = () => { closeOverlay('loginModal'); $('loginPassword').value = ''; };
+
+        const submitLogin = async (e) => {
+            e.preventDefault();
+            const btn = $('loginSubmitBtn');
+            btn.disabled = true;
+            const { error } = await db.auth.signInWithPassword({ email: $('loginEmail').value.trim(), password: $('loginPassword').value });
+            btn.disabled = false;
+            if (error) {
+                $('loginError').textContent = error.message;
+                $('loginError').classList.remove('hidden');
+                return;
+            }
+            closeLoginModal();
+            openOwnerDashboard();
+        };
+
+        const signOutOwner = async () => {
+            await db.auth.signOut();
+            closeOwnerDashboard();
+            showToast('Signed out', 'Owner session ended.', 'done');
+        };
+
+        // Every write goes through here: needs a login, and reports errors instead of hiding them
+        const requireOwner = async () => {
+            if (await getSession()) return true;
+            showToast('Login required', 'Please sign in as the owner first.', 'error');
+            closeOverlay('ownerDashboardModal');
+            openOverlay('loginModal');
+            return false;
+        };
+
+        const dbWrite = async (query) => {
+            if (!(await requireOwner())) return false;
+            const { data, error } = await query;
+            if (error || !data || !data.length) {
+                console.error('Write failed:', error);
+                showToast('Save failed', error ? error.message : 'Not allowed. Check the owner login and Supabase policies.', 'error');
+                return false;
+            }
+            return true;
+        };
+
+        // =====================================================================
+        // Owner dashboard
+        // =====================================================================
         const openOwnerDashboard = () => {
+            $('dashboardCategoryFilter').value = 'all';
+            $('dashboardSearch').value = '';
             updateDashboardStats();
-            document.getElementById('dashboardCategoryFilter').value = 'all';
-            document.getElementById('dashboardSearch').value = '';
-            renderDashboardInventory(furnitureProducts);
-            const dash = document.getElementById('ownerDashboardModal');
-            dash.classList.remove('hidden'); dash.classList.add('flex');
-            document.body.style.overflow = 'hidden';
+            renderDashboardInventory(products);
+            openOverlay('ownerDashboardModal');
         };
 
-        const closeOwnerDashboard = () => { document.getElementById('ownerDashboardModal').classList.add('hidden'); document.getElementById('ownerDashboardModal').classList.remove('flex'); document.body.style.overflow = 'auto'; handleAdvancedFilters(); };
+        const closeOwnerDashboard = () => { closeOverlay('ownerDashboardModal'); handleAdvancedFilters(); };
 
         const updateDashboardStats = () => {
-            document.getElementById('statWhatsAppClicks').textContent = clickAnalytics.totalClicks || 0;
-            document.getElementById('statTotalProducts').textContent = furnitureProducts.length;
-            document.getElementById('statOutOfStock').textContent = furnitureProducts.filter(p => p.stockStatus === "Out of Stock").length;
+            $('statWhatsAppClicks').textContent = clicks.totalClicks || 0;
+            $('statTotalProducts').textContent = products.length;
+            $('statOutOfStock').textContent = products.filter((p) => p.stockStatus === 'Out of Stock').length;
         };
 
         const renderDashboardInventory = (items) => {
-            const tbody = document.getElementById('inventoryTableBody');
-            if (items.length === 0) { tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-stone-400">No items found.</td></tr>`; return; }
-            tbody.innerHTML = items.map(p => {
-                const isOut = p.stockStatus === "Out of Stock";
-                const displayImg = (p.images && p.images.length > 0) ? p.images[0] : 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800';
+            const tbody = $('inventoryTableBody');
+            if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="p-6 text-center text-stone-400">No items found.</td></tr>'; return; }
+            tbody.innerHTML = items.map((p) => {
+                const isOut = p.stockStatus === 'Out of Stock';
+                const id = esc(p.id);
                 return `
                     <tr class="hover:bg-stone-50 transition">
                         <td class="p-4 flex items-center gap-3">
-                            <img src="${displayImg}" class="w-12 h-12 rounded-xl object-cover border shrink-0">
+                            <img src="${esc(firstImage(p))}" alt="" onerror="this.onerror=null;this.src=FALLBACK_IMG" class="w-12 h-12 rounded-xl object-cover border shrink-0">
                             <div>
-                                <strong class="text-stone-900 text-sm">${p.name}</strong>
-                                <span class="text-xs text-stone-500 block">${p.subCategory} (${p.images ? p.images.length : 0} image/s)</span>
+                                <strong class="text-stone-900 text-sm">${esc(p.name)}</strong>
+                                <span class="text-xs text-stone-500 block">${esc(p.subCategory)} (${p.images.length} image/s)</span>
                             </div>
                         </td>
-                        <td class="p-4 text-xs font-semibold">${p.category}</td>
-                        <td class="p-4 font-bold text-brand-800">${formatCurrency(p.priceNum)}</td>
-                        <td class="p-4"><button onclick="toggleProductStock(${p.id})" class="px-3 py-1.5 rounded-full text-xs font-bold ${isOut ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.stockStatus}</button></td>
-                        <td class="p-4"><button onclick="toggleSaleStatus(${p.id})" class="px-3 py-1 rounded-lg text-xs font-bold ${p.onSale ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-600'}">${p.onSale ? 'On Sale' : 'Normal'}</button></td>
+                        <td class="p-4 text-xs font-semibold">${esc(p.category)}</td>
+                        <td class="p-4 font-bold text-brand-800">${priceHtml(p)}</td>
+                        <td class="p-4"><button onclick="toggleProductStock('${id}')" class="px-3 py-1.5 rounded-full text-xs font-bold ${isOut ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${esc(p.stockStatus)}</button></td>
+                        <td class="p-4"><button onclick="toggleSaleStatus('${id}')" class="px-3 py-1 rounded-lg text-xs font-bold ${p.onSale ? 'bg-amber-100 text-amber-800' : 'bg-stone-100 text-stone-600'}">${p.onSale ? 'On Sale' : 'Normal'}</button></td>
                         <td class="p-4 text-center space-x-2">
-                            <button onclick="openEditProductModal(${p.id})" class="p-2 bg-stone-100 hover:bg-brand-600 hover:text-white rounded-xl"><i class="fa-solid fa-pen text-xs"></i></button>
-                            <button onclick="deleteProduct(${p.id})" class="p-2 bg-stone-100 hover:bg-rose-600 hover:text-white rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
+                            <button onclick="openEditProductModal('${id}')" aria-label="Edit" class="p-2 bg-stone-100 hover:bg-brand-600 hover:text-white rounded-xl"><i class="fa-solid fa-pen text-xs"></i></button>
+                            <button onclick="deleteProduct('${id}')" aria-label="Delete" class="p-2 bg-stone-100 hover:bg-rose-600 hover:text-white rounded-xl"><i class="fa-solid fa-trash text-xs"></i></button>
                         </td>
-                    </tr>
-                `;
+                    </tr>`;
             }).join('');
         };
 
         const filterDashboardInventory = () => {
-            const q = document.getElementById('dashboardSearch').value.toLowerCase();
-            const cat = document.getElementById('dashboardCategoryFilter').value;
-            renderDashboardInventory(furnitureProducts.filter(p => (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) && (cat === 'all' || p.category === cat)));
+            const q = $('dashboardSearch').value.toLowerCase();
+            const cat = $('dashboardCategoryFilter').value;
+            renderDashboardInventory(products.filter((p) =>
+                (p.name.toLowerCase().includes(q) || p.category.toLowerCase().includes(q)) && (cat === 'all' || p.category === cat)));
         };
 
-        const toggleProductStock = async (id) => { 
-            const p = furnitureProducts.find(item => item.id === id); 
-            if (p) { 
-                const newStatus = p.stockStatus === "Out of Stock" ? "In Stock" : "Out of Stock";
-                p.stockStatus = newStatus;
-                await db.from('products').update({ stock_status: newStatus }).eq('id', id);
-                updateDashboardStats(); 
-                filterDashboardInventory(); 
-                handleAdvancedFilters();
-            } 
+        const updateProductField = async (id, patch) => {
+            if (await dbWrite(db.from('products').update(patch).eq('id', id).select())) await fetchProducts();
         };
 
-        const toggleSaleStatus = async (id) => { 
-            const p = furnitureProducts.find(item => item.id === id); 
-            if (p) { 
-                const newSaleState = !p.onSale;
-                p.onSale = newSaleState;
-                await db.from('products').update({ on_sale: newSaleState }).eq('id', id);
-                filterDashboardInventory(); 
-                handleAdvancedFilters();
-            } 
+        const toggleProductStock = (id) => {
+            const p = findProduct(id);
+            if (p) updateProductField(id, { stock_status: p.stockStatus === 'Out of Stock' ? 'In Stock' : 'Out of Stock' });
         };
 
-        const deleteProduct = async (id) => { 
-            if (confirm("Delete this item?")) { 
-                furnitureProducts = furnitureProducts.filter(p => p.id !== id);
-                await db.from('products').delete().eq('id', id);
-                updateDashboardStats(); 
-                filterDashboardInventory(); 
-                handleAdvancedFilters();
-            } 
+        const toggleSaleStatus = (id) => {
+            const p = findProduct(id);
+            if (p) updateProductField(id, { on_sale: !p.onSale });
+        };
+
+        const deleteProduct = async (id) => {
+            const p = findProduct(id);
+            if (!p || !confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+            if (await dbWrite(db.from('products').delete().eq('id', id).select())) {
+                await fetchProducts();
+                showToast('Deleted', `"${p.name}" was removed.`, 'done');
+            }
         };
 
         const exportAnalyticsCSV = () => {
-            let csvRows = [];
-            csvRows.push(["Source/Item", "Click Count"]);
-            csvRows.push(["Total Contact Clicks", clickAnalytics.totalClicks || 0]);
-            
-            for (const [key, val] of Object.entries(clickAnalytics.items || {})) {
-                csvRows.push([key, val]);
-            }
-
-            let csvContent = csvRows.map(e => e.map(val => `"${String(val).replace(/"/g, '""')}"`).join(",")).join("\n");
-            
-            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const safeCell = (v) => {
+                let s = String(v);
+                if (/^[=+\-@\t\r]/.test(s)) s = "'" + s;      // stop spreadsheet formula injection
+                return `"${s.replace(/"/g, '""')}"`;
+            };
+            const rows = [['Source/Item', 'Click Count'], ['Total Contact Clicks', clicks.totalClicks || 0], ...Object.entries(clicks.items)];
+            const blob = new Blob([rows.map((r) => r.map(safeCell).join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const link = document.createElement("a");
-            link.setAttribute("href", url);
-            link.setAttribute("download", "emarko_leads_report.csv");
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'emarko_leads_report.csv';
             document.body.appendChild(link);
             link.click();
-            document.body.removeChild(link);
+            link.remove();
+            URL.revokeObjectURL(url);
         };
 
+        // =====================================================================
+        // Product editor + image upload
+        // =====================================================================
         const previewSelectedFiles = (input) => {
-            const badge = document.getElementById('selectedFilesBadge');
-            const countSpan = document.getElementById('selectedFilesCount');
-            if (input.files && input.files.length > 0) {
-                countSpan.textContent = `${input.files.length} image file(s) selected`;
-                badge.classList.remove('hidden');
-            } else {
-                badge.classList.add('hidden');
-            }
+            const n = input.files ? input.files.length : 0;
+            $('selectedFilesCount').textContent = `${n} image file(s) selected`;
+            $('selectedFilesBadge').classList.toggle('hidden', n === 0);
         };
 
         const openAddProductModal = () => {
-            document.getElementById('editorModalTitle').textContent = "Add Furniture Item";
-            document.getElementById('submitProductBtn').innerHTML = `<i class="fa-solid fa-plus"></i> Add Product`;
-            document.getElementById('productForm').reset();
-            document.getElementById('editProductId').value = "";
-            document.getElementById('selectedFilesBadge').classList.add('hidden');
-            document.getElementById('uploadProgressContainer').classList.add('hidden');
-            document.getElementById('productEditorModal').classList.remove('hidden'); 
-            document.getElementById('productEditorModal').classList.add('flex');
+            $('editorModalTitle').textContent = 'Add Furniture Item';
+            $('submitProductBtn').innerHTML = '<i class="fa-solid fa-plus"></i> Add Product';
+            $('productForm').reset();
+            $('editProductId').value = '';
+            $('selectedFilesBadge').classList.add('hidden');
+            openOverlay('productEditorModal');
         };
 
         const openEditProductModal = (id) => {
-            const p = furnitureProducts.find(item => item.id === id);
+            const p = findProduct(id);
             if (!p) return;
-            document.getElementById('editorModalTitle').textContent = "Edit Furniture Item";
-            document.getElementById('submitProductBtn').innerHTML = `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
-            document.getElementById('editProductId').value = p.id;
-            document.getElementById('formName').value = p.name;
-            document.getElementById('formCategory').value = p.category;
-            document.getElementById('formSubCategory').value = p.subCategory;
-            document.getElementById('formNumericPrice').value = p.priceNum;
-            document.getElementById('formBadge').value = p.badge;
-            document.getElementById('formDescription').value = p.description;
-            document.getElementById('formDimensions').value = p.dimensions;
-            document.getElementById('formWarranty').value = p.warranty;
-            document.getElementById('formStockStatus').value = p.stockStatus;
-            document.getElementById('formImageUrl').value = (p.images && p.images.length > 0) ? p.images.join(', ') : '';
-            document.getElementById('selectedFilesBadge').classList.add('hidden');
-            document.getElementById('uploadProgressContainer').classList.add('hidden');
-            document.getElementById('productEditorModal').classList.remove('hidden'); 
-            document.getElementById('productEditorModal').classList.add('flex');
+            $('editorModalTitle').textContent = 'Edit Furniture Item';
+            $('submitProductBtn').innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Changes';
+            $('productForm').reset();
+            $('editProductId').value = p.id;
+            $('formName').value = p.name;
+            $('formCategory').value = p.category;
+            $('formSubCategory').value = p.subCategory;
+            $('formNumericPrice').value = p.priceNum;
+            $('formSalePrice').value = p.salePrice || '';
+            $('formBadge').value = p.badge;
+            $('formDescription').value = p.description;
+            $('formDimensions').value = p.dimensions;
+            $('formWarranty').value = p.warranty;
+            $('formStockStatus').value = p.stockStatus;
+            // Only web links go in the text box; uploaded (inline) images are kept automatically on save
+            $('formImageUrl').value = p.images.filter((i) => /^https?:\/\//i.test(i)).join(', ');
+            $('selectedFilesBadge').classList.add('hidden');
+            openOverlay('productEditorModal');
         };
 
-        const closeProductEditor = () => { document.getElementById('productEditorModal').classList.add('hidden'); document.getElementById('productEditorModal').classList.remove('flex'); };
+        const closeProductEditor = () => closeOverlay('productEditorModal');
 
-        // Helper function to read & compress image asynchronously to canvas DataURL to prevent giant payloads
-        const compressAndReadFile = (file, maxWidth = 1000, maxQuality = 0.75) => {
-            return new Promise((resolve, reject) => {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const img = new Image();
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        let width = img.width;
-                        let height = img.height;
+        // Resize + compress so photos stay small (max 1400px, JPEG)
+        const compressImage = (file, maxSize = 1400, quality = 0.82) => new Promise((resolve, reject) => {
+            const url = URL.createObjectURL(file);
+            const img = new Image();
+            img.onload = () => {
+                const scale = Math.min(1, maxSize / Math.max(img.width, img.height));
+                const canvas = document.createElement('canvas');
+                canvas.width = Math.round(img.width * scale);
+                canvas.height = Math.round(img.height * scale);
+                canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                URL.revokeObjectURL(url);
+                canvas.toBlob((b) => (b ? resolve(b) : reject(new Error('Image compression failed'))), 'image/jpeg', quality);
+            };
+            img.onerror = () => { URL.revokeObjectURL(url); reject(new Error('Could not read image file')); };
+            img.src = url;
+        });
 
-                        if (width > maxWidth) {
-                            height = Math.round((height * maxWidth) / width);
-                            width = maxWidth;
-                        }
+        const blobToDataURL = (blob) => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
 
-                        canvas.width = width;
-                        canvas.height = height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0, width, height);
-
-                        const dataUrl = canvas.toDataURL('image/jpeg', maxQuality);
-                        resolve(dataUrl);
-                    };
-                    img.onerror = (err) => reject(err);
-                    img.src = e.target.result;
-                };
-                reader.onerror = (err) => reject(err);
-                reader.readAsDataURL(file);
-            });
+        // Upload to Supabase Storage; if the bucket isn't set up yet, fall back to an inline image
+        const uploadImage = async (file) => {
+            const blob = await compressImage(file);
+            const path = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}.jpg`;
+            const { error } = await db.storage.from(IMAGE_BUCKET).upload(path, blob, { contentType: 'image/jpeg' });
+            if (!error) return { url: db.storage.from(IMAGE_BUCKET).getPublicUrl(path).data.publicUrl, inline: false };
+            console.warn('Storage upload failed, saving inline instead:', error.message);
+            return { url: await blobToDataURL(blob), inline: true };
         };
 
-        // --- Save Form Function with Progress Bar & Background Task Processing ---
         const saveProductForm = async (e) => {
             e.preventDefault();
+            if (!(await requireOwner())) return;
 
-            // Extract Form Values
-            const editId = document.getElementById('editProductId').value;
-            const name = document.getElementById('formName').value;
-            const category = document.getElementById('formCategory').value;
-            const subCategory = document.getElementById('formSubCategory').value;
-            const priceNum = parseInt(document.getElementById('formNumericPrice').value) || 50000;
-            const badge = document.getElementById('formBadge').value;
-            const description = document.getElementById('formDescription').value;
-            const dimensions = document.getElementById('formDimensions').value;
-            const warranty = document.getElementById('formWarranty').value;
-            const stockStatus = document.getElementById('formStockStatus').value;
+            const editId = $('editProductId').value;
+            const existing = editId ? findProduct(editId) : null;
+            const files = [...$('formImageFile').files];
+            const typedUrls = $('formImageUrl').value.split(',').map((u) => u.trim()).filter((u) => /^https?:\/\//i.test(u));
+            const keptInline = existing ? existing.images.filter((i) => /^data:image\//i.test(i)) : [];
+            const price = parseInt($('formNumericPrice').value, 10);
+            if (isNaN(price) || price < 0) { showToast('Invalid price', 'Enter a valid price in LKR.', 'error'); return; }
+            const rawSale = $('formSalePrice').value.trim();
+            const salePrice = rawSale === '' ? null : parseInt(rawSale, 10);
+            if (salePrice !== null && (isNaN(salePrice) || salePrice <= 0 || salePrice >= price)) {
+                showToast('Invalid sale price', 'The sale price must be lower than the regular price.', 'error');
+                return;
+            }
+            if (salePrice !== null && !hasSaleColumn) {
+                showToast('Sale price not set up', 'Run add_sale_price.sql in Supabase first, then try again.', 'error');
+                return;
+            }
 
-            const rawUrlInput = document.getElementById('formImageUrl').value.trim();
-            const fileInput = document.getElementById('formImageFile');
-            const files = fileInput.files;
+            const row = {
+                name: $('formName').value.trim(),
+                category: $('formCategory').value,
+                sub_category: $('formSubCategory').value.trim(),
+                price_num: price,
+                badge: $('formBadge').value.trim(),
+                description: $('formDescription').value.trim(),
+                dimensions: $('formDimensions').value.trim(),
+                warranty: $('formWarranty').value.trim(),
+                stock_status: $('formStockStatus').value
+            };
+            const previousSale = existing ? existing.salePrice : null;
+            if (hasSaleColumn) row.sale_price_num = salePrice;
+            if (salePrice !== null && salePrice !== previousSale) row.on_sale = true;      // new/changed sale price switches the sale on
+            else if (salePrice === null && previousSale) row.on_sale = false;               // clearing it switches the sale off
 
-            // Immediately close editor modal for seamless UI response
             closeProductEditor();
+            showToast(editId ? 'Updating Product...' : 'Adding Product...', 'Saving to Supabase...');
 
-            // Show Toast Notification that process has started in background
-            showToast('Saving Product...', 'Processing images and updating record...');
-
-            // Background async execution
-            setTimeout(async () => {
-                try {
-                    let compiledImages = [];
-
-                    // 1. Process URL inputs if provided
-                    if (rawUrlInput) {
-                        const urls = rawUrlInput.split(',').map(u => u.trim()).filter(u => u.length > 0);
-                        compiledImages.push(...urls);
-                    }
-
-                    // 2. Process local files with canvas compression if provided
-                    if (files && files.length > 0) {
-                        const totalFiles = files.length;
-                        for (let i = 0; i < totalFiles; i++) {
-                            const compressedDataUrl = await compressAndReadFile(files[i]);
-                            compiledImages.push(compressedDataUrl);
-                        }
-                    }
-
-                    // Fallback default image if none supplied
-                    if (compiledImages.length === 0) {
-                        compiledImages.push('https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&q=80&w=800');
-                    }
-
-                    const payload = {
-                        name: name,
-                        category: category,
-                        sub_category: subCategory,
-                        price_num: priceNum,
-                        badge: badge,
-                        description: description,
-                        dimensions: dimensions,
-                        warranty: warranty,
-                        stock_status: stockStatus,
-                        on_sale: false,
-                        images: compiledImages
-                    };
-
-                    let savedRecord = null;
-
-                    if (editId) {
-                        const { data, error } = await db.from('products').update(payload).eq('id', editId).select();
-                        if (error) console.error('Error updating in Supabase:', error);
-                        else if (data && data.length > 0) savedRecord = data[0];
-                    } else {
-                        const { data, error } = await db.from('products').insert([payload]).select();
-                        if (error) console.error('Error inserting into Supabase:', error);
-                        else if (data && data.length > 0) savedRecord = data[0];
-                    }
-
-                    // Local state backup sync
-                    if (editId) {
-                        const idx = furnitureProducts.findIndex(p => p.id == editId);
-                        if (idx !== -1) {
-                            furnitureProducts[idx] = {
-                                ...furnitureProducts[idx],
-                                name, category, subCategory, priceNum, badge, description, dimensions, warranty, stockStatus, images: compiledImages
-                            };
-                        }
-                    } else {
-                        const newId = savedRecord ? savedRecord.id : Date.now();
-                        furnitureProducts.unshift({
-                            id: newId,
-                            name, category, subCategory, priceNum, badge, description, dimensions, warranty, stockStatus, onSale: false, images: compiledImages, createdAt: Date.now()
-                        });
-                    }
-
-                    // Refresh catalog views
-                    updateDashboardStats();
-                    filterDashboardInventory();
-                    handleAdvancedFilters();
-
-                    showToast('Product Saved!', `"${name}" has been published successfully.`, true);
-
-                } catch (err) {
-                    console.error('Background process error:', err);
-                    showToast('Save Error', 'An error occurred while saving the product.', true);
+            try {
+                const uploaded = [];
+                let usedInline = false;
+                for (let i = 0; i < files.length; i++) {
+                    showToast('Uploading images...', `Image ${i + 1} of ${files.length}`);
+                    const result = await uploadImage(files[i]);
+                    uploaded.push(result.url);
+                    usedInline = usedInline || result.inline;
                 }
-            }, 50);
+                const images = [...typedUrls, ...keptInline, ...uploaded];
+                row.images = images.length ? images : [FALLBACK_IMG];
+
+                const query = editId
+                    ? db.from('products').update(row).eq('id', editId).select()
+                    : db.from('products').insert([{ on_sale: false, ...row }]).select();
+                if (!(await dbWrite(query))) return;
+
+                await fetchProducts();
+                showToast(editId ? 'Product Updated!' : 'Product Added!',
+                    usedInline ? `"${row.name}" saved (images stored inline - create the "${IMAGE_BUCKET}" bucket for faster loading).` : `"${row.name}" saved.`,
+                    'done');
+            } catch (err) {
+                console.error('Save failed:', err);
+                showToast('Update Error', err.message || 'Failed to save product.', 'error');
+            }
         };
 
-        const filterProducts = (category) => {
-            currentFilterCategory = category;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                const text = btn.textContent.trim().toLowerCase();
-                const target = category.toLowerCase();
-                const isMatch = text === target || (target === 'living room' && text === 'living') || (category === 'all' && text === 'all');
-                
-                if (isMatch) {
-                    btn.classList.add('active', 'bg-white', 'text-stone-900', 'shadow-sm'); 
-                    btn.classList.remove('text-stone-600');
-                } else {
-                    btn.classList.remove('active', 'bg-white', 'text-stone-900', 'shadow-sm'); 
-                    btn.classList.add('text-stone-600');
-                }
-            });
-            handleAdvancedFilters();
-        };
+        // =====================================================================
+        // Keyboard + startup
+        // =====================================================================
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            const top = ['lightboxModal', 'productEditorModal', 'loginModal', 'productModal', 'ownerDashboardModal'].find(isOpen);
+            if (top) closeOverlay(top);
+            else if (!$('cartDrawer').classList.contains('translate-x-full')) toggleCartDrawer();
+        });
 
-        const filterBySubCategory = (cat, sub) => {
-            currentFilterCategory = cat;
-            const res = furnitureProducts.filter(p => p.category.toLowerCase() === cat.toLowerCase() && p.subCategory.toLowerCase() === sub.toLowerCase());
-            renderProductsList(res, sub, false);
-            document.getElementById('collection').scrollIntoView({ behavior: 'smooth' });
-        };
-
-        const toggleMobileMenu = () => document.getElementById('mobileMenu').classList.toggle('hidden');
-
-        document.addEventListener('DOMContentLoaded', () => {
-            fetchProducts();
+        window.addEventListener('DOMContentLoaded', () => {
             updateCartBadge();
+            fetchProducts();
+            setupRealtime();
         });
     </script>
+
 </body>
 </html>
